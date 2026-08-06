@@ -1,7 +1,8 @@
 /* =====================================================
-   ConsumerLens AI — script.js (Bilingual: 中文 / English)
+   ConsumerLens AI — script.js (V2, Bilingual: 中文 / English)
    100% local, rule-based text analysis.
    No APIs, no backend, no external services.
+   Uses Chart.js (CDN) purely for client-side rendering.
 ===================================================== */
 
 (function () {
@@ -20,6 +21,14 @@
       tagline: "消费者之声与竞争洞察平台",
       heroDesc: "将消费者评论转化为可执行的商业洞察。",
 
+      wfTitle: "AI 智能分析工作流",
+      wfSubtitle: "四步本地 AI 代理管道，将原始评论转化为可执行的商业建议",
+      wfNodeReviews: "消费者评论",
+      wfAgent1Sub: "语音解析器",
+      wfAgent2Sub: "消费者洞察生成器",
+      wfAgent3Sub: "竞争情报分析",
+      wfNodeOutput: "业务建议",
+
       inputSectionTitle: "1. 输入评论进行分析",
       inputSectionSubtext: "粘贴真实或示例客户评论，每条评论请单独占一行。建议每个品牌至少输入 3 条评论，以获得有意义的分析结果。",
       labelBrandName: "品牌名称",
@@ -37,12 +46,12 @@
 
       progressSectionTitle: "2. 正在进行本地分析",
       progressSectionSubtext: "所有分析均在您的浏览器本地完成，基于规则的文本分析技术，不调用任何外部服务。",
-      agent1Name: "Agent 1：情感分析",
-      agent2Name: "Agent 2：主题发现",
-      agent3Name: "Agent 3：消费者洞察",
-      agent4Name: "Agent 4：竞争对标",
+      agent1Name: "Agent 1：语音解析器",
+      agent2Name: "Agent 2：消费者洞察生成器",
+      agent3Name: "Agent 3：竞争情报分析",
       statusWaiting: "等待中",
       statusAnalysing: "分析中",
+      statusGenerating: "生成中",
       statusComplete: "已完成",
 
       dashboardTitle: "结果仪表盘",
@@ -53,27 +62,55 @@
       neutralLabel: "中立评论",
       negativeLabel: "负面评论",
       topPositiveThemesTitle: "主要正面主题",
-      painPointsTitle: "核心痛点",
       consumerInsightsTitle: "消费者洞察",
+
+      painPointDashboardTitle: "痛点仪表盘",
+      painPointDashboardSubtitle: "自动汇总本品牌评论中最主要的五大痛点",
+      painPointChartAxisLabel: "占本品牌评论的百分比",
+
+      opportunityDashboardTitle: "机会仪表盘",
+      opportunityDashboardSubtitle: "基于客户投诉自动生成的改进机会",
+      opportunityCardTitlePrefix: "机会",
+      impactHigh: "高潜力",
+      impactMedium: "中等潜力",
+      impactLow: "低潜力",
+      opportunityEvidence: (n) => `依据：${n} 条负面评论提及`,
+      noOpportunitiesText: "暂未检测到明显的改进机会，说明当前评论整体反馈良好。",
+
       personasTitle: "消费者画像",
-      personasSubtext: "仅展示评论中有证据支持的消费者画像。",
-      benchmarkTitle: "竞争对标",
+      personasSubtext: "仅展示评论中有证据支持的消费者画像；以下属性为基于语言模式推断的典型特征，并非从评论者收集的真实人口统计数据。",
+      personaAgeLabel: "年龄范围",
+      personaMotivationLabel: "核心动机",
+      personaPainLabel: "主要痛点",
+      personaDriverLabel: "购买驱动因素",
+      personaCommLabel: "沟通风格",
+      noPersonasText: "暂未检测到有力的消费者画像特征，尝试输入更详细的评论以获得画像分析。",
+
+      competitiveGapTitle: "竞争差距分析",
       colCategory: "类别",
       colYourBrand: "本品牌",
       colCompetitor: "竞品",
       colGap: "差距",
+      strengthsTitle: "我们的优势",
+      weaknessesTitle: "我们的劣势",
+      noStrengthsText: "暂未检测到明显领先的对比维度。",
+      noWeaknessesText: "暂未检测到明显落后的对比维度。",
+
       actionPlanTitle: "优先行动计划",
       highPriority: "高优先级",
       mediumPriority: "中优先级",
       lowPriority: "低优先级",
+
       trendTitle: "历史趋势",
       trendSubtext: "追踪您在此浏览器上完成的所有分析的满意度得分变化。",
       trendEmptyText: "完成至少两次分析后，这里将显示趋势折线图。每次完成的分析都会自动保存到您浏览器的本地历史记录中。",
+      trendBrandLabel: "本品牌",
+      trendCompetitorLabel: "竞品",
+
       mentionsSuffix: "条提及",
       reviewsSuffix: "条评论",
       noPositiveThemesText: "未在这些评论中检测到明显的正面主题。",
       noPainPointsText: "未在这些评论中检测到明显的负面主题。",
-      noPersonasText: "暂未检测到有力的消费者画像特征，尝试输入更详细的评论以获得画像分析。",
 
       historyTitle: "历史记录",
       historySubtext: "数据保存在您浏览器的本地存储（localStorage）中。点击任意记录可重新加载该次分析结果。",
@@ -91,7 +128,16 @@
       personaHistoryNote: "历史记录不保存画像细节，请重新运行一次分析以生成画像。",
       benchmarkHistoryNote: "历史记录不保存对标细节，请重新运行一次分析以生成完整对比。",
       actionHistoryNote: "请重新运行一次分析以生成完整行动计划。",
-      runNewAnalysis: "请重新运行分析",
+      opportunityHistoryNote: "历史记录不保存机会细节，请重新运行一次分析以生成完整机会仪表盘。",
+      execSummaryHistoryNote: "历史记录不保存完整摘要，请重新运行一次分析以生成高管摘要。",
+
+      execSummaryTitle: "高管摘要",
+      execSummarySubtitle: "适合市场经理阅读的简明报告",
+      execOverviewLabel: "总体概况",
+      execStrengthLabel: "核心优势",
+      execRiskLabel: "主要风险",
+      execPositionLabel: "竞争位置",
+      execRecommendationLabel: "建议下一步",
 
       defaultBrandName: "本品牌",
       defaultCompetitorName: "竞品"
@@ -101,6 +147,14 @@
       tagBadge: "Runs 100% locally · No API · No cost",
       tagline: "Voice of Customer & Competitive Intelligence Platform",
       heroDesc: "Turn customer feedback into actionable business insights.",
+
+      wfTitle: "AI Analysis Workflow",
+      wfSubtitle: "A four-step local AI agent pipeline that turns raw reviews into actionable business recommendations",
+      wfNodeReviews: "Consumer Reviews",
+      wfAgent1Sub: "Voice Parser",
+      wfAgent2Sub: "Consumer Insight Generator",
+      wfAgent3Sub: "Competitive Intelligence",
+      wfNodeOutput: "Business Recommendation",
 
       inputSectionTitle: "1. Enter Reviews for Analysis",
       inputSectionSubtext: "Paste real or sample customer reviews below. Each review should be on its own line. We recommend at least 3 reviews per brand for meaningful results.",
@@ -119,12 +173,12 @@
 
       progressSectionTitle: "2. Running Local Analysis",
       progressSectionSubtext: "All processing happens in your browser using rule-based text analysis. No external services are called.",
-      agent1Name: "Agent 1: Sentiment Analysis",
-      agent2Name: "Agent 2: Theme Discovery",
-      agent3Name: "Agent 3: Consumer Insight",
-      agent4Name: "Agent 4: Competitive Benchmark",
+      agent1Name: "Agent 1: Voice Parser",
+      agent2Name: "Agent 2: Consumer Insight Generator",
+      agent3Name: "Agent 3: Competitive Intelligence",
       statusWaiting: "Waiting",
       statusAnalysing: "Analysing",
+      statusGenerating: "Generating",
       statusComplete: "Completed",
 
       dashboardTitle: "Results Dashboard",
@@ -135,27 +189,55 @@
       neutralLabel: "Neutral Reviews",
       negativeLabel: "Negative Reviews",
       topPositiveThemesTitle: "Top Positive Themes",
-      painPointsTitle: "Key Pain Points",
       consumerInsightsTitle: "Consumer Insights",
+
+      painPointDashboardTitle: "Pain Point Dashboard",
+      painPointDashboardSubtitle: "Automatically summarizes the top 5 pain points from your brand's reviews",
+      painPointChartAxisLabel: "% of your brand's reviews",
+
+      opportunityDashboardTitle: "Opportunity Dashboard",
+      opportunityDashboardSubtitle: "Opportunities automatically generated from customer complaints",
+      opportunityCardTitlePrefix: "Opportunity",
+      impactHigh: "High Impact",
+      impactMedium: "Medium Impact",
+      impactLow: "Low Impact",
+      opportunityEvidence: (n) => `Based on ${n} negative mention(s)`,
+      noOpportunitiesText: "No clear improvement opportunities detected — overall feedback looks strong.",
+
       personasTitle: "Consumer Personas",
-      personasSubtext: "Personas are only shown when supported by evidence in the submitted reviews.",
-      benchmarkTitle: "Competitive Benchmark",
+      personasSubtext: "Personas are only shown when supported by evidence in the submitted reviews. Attributes below are inferred archetypes based on language patterns, not demographic data collected from reviewers.",
+      personaAgeLabel: "Age Range",
+      personaMotivationLabel: "Motivation",
+      personaPainLabel: "Pain Points",
+      personaDriverLabel: "Purchase Driver",
+      personaCommLabel: "Communication Style",
+      noPersonasText: "No strong persona patterns were detected yet. Try adding more detailed reviews to surface consumer personas.",
+
+      competitiveGapTitle: "Competitive Gap",
       colCategory: "Category",
       colYourBrand: "Your Brand",
       colCompetitor: "Competitor",
       colGap: "Gap",
+      strengthsTitle: "Our Strengths",
+      weaknessesTitle: "Our Weaknesses",
+      noStrengthsText: "No categories with a clear lead were detected.",
+      noWeaknessesText: "No categories with a clear deficit were detected.",
+
       actionPlanTitle: "Priority Action Plan",
       highPriority: "High Priority",
       mediumPriority: "Medium Priority",
       lowPriority: "Low Priority",
+
       trendTitle: "Historical Trend",
       trendSubtext: "Tracks satisfaction scores across all analyses completed on this browser.",
       trendEmptyText: "Run at least two analyses to see a trend line here. Each completed analysis is saved automatically to your browser's local history.",
+      trendBrandLabel: "Your Brand",
+      trendCompetitorLabel: "Competitor",
+
       mentionsSuffix: " mention(s)",
       reviewsSuffix: " reviews",
       noPositiveThemesText: "No clear positive themes were detected in these reviews.",
       noPainPointsText: "No clear negative themes were detected in these reviews.",
-      noPersonasText: "No strong persona patterns were detected yet. Try adding more detailed reviews to surface consumer personas.",
 
       historyTitle: "Analysis History",
       historySubtext: "Stored locally in your browser using localStorage. Click an entry to reload that result.",
@@ -173,7 +255,16 @@
       personaHistoryNote: "Persona detail is not stored in history. Run a new analysis to regenerate personas.",
       benchmarkHistoryNote: "Benchmark detail is not stored in history. Run a new analysis to regenerate the full comparison.",
       actionHistoryNote: "Run a new analysis to regenerate a full action plan.",
-      runNewAnalysis: "Run a new analysis",
+      opportunityHistoryNote: "Opportunity detail is not stored in history. Run a new analysis to regenerate the opportunity dashboard.",
+      execSummaryHistoryNote: "Full summary detail is not stored in history. Run a new analysis to regenerate the executive summary.",
+
+      execSummaryTitle: "Executive Summary",
+      execSummarySubtitle: "A concise report for marketing managers",
+      execOverviewLabel: "Overview",
+      execStrengthLabel: "Key Strength",
+      execRiskLabel: "Key Risk",
+      execPositionLabel: "Competitive Position",
+      execRecommendationLabel: "Recommended Next Step",
 
       defaultBrandName: "Your Brand",
       defaultCompetitorName: "Competitor"
@@ -181,7 +272,8 @@
   };
 
   function t(key) {
-    return I18N[state.lang][key] || key;
+    const val = I18N[state.lang][key];
+    return typeof val === "function" ? val : val || key;
   }
 
   /* -----------------------------------------------------
@@ -324,30 +416,127 @@
     }
   };
 
-  const PERSONA_DEFINITIONS = {
+  const OPPORTUNITY_TEMPLATES = {
     zh: {
-      price: { title: "价格敏感型消费者", tags: ["价格敏感", "追求性价比"],
-        describe: (c) => `密切关注价格与价值的平衡。价格相关话题在 ${c} 条评论中被提及，显示该客群非常看重性价比。` },
-      quality: { title: "品质导向型消费者", tags: ["注重细节", "品牌忠诚"],
-        describe: (c) => `重视产品的耐用性与一致性。质量相关话题在 ${c} 条评论中被提及，表明该客群会仔细比较产品标准。` },
-      convenience: { title: "便利导向型消费者", tags: ["时间紧张", "务实"],
-        describe: (c) => `重视易用性与便携性。便利性话题在 ${c} 条评论中被提及，通常与忙碌的生活方式相关。` },
-      ingredients: { title: "健康健身型消费者", tags: ["注重健康", "关注成分表"],
-        describe: (c) => `关注营养与成分品质。成分相关话题在 ${c} 条评论中被提及，反映出注重健康的购买决策。` },
-      design: { title: "设计审美型消费者", tags: ["注重美感", "在意品牌形象"],
-        describe: (c) => `留意产品的视觉呈现与风格。设计相关话题在 ${c} 条评论中被提及，说明外观会影响该客群的评价。` }
+      price: "推出透明定价或增值套餐，将价格顾虑转化为忠诚度提升的机会。",
+      quality: "建立更严格的质检流程，把质量痛点转化为口碑差异化优势。",
+      taste: "重新配方优化口感，将口味反馈转化为产品迭代的方向。",
+      packaging: "升级包装结构与视觉设计，将包装问题转化为货架竞争力提升的机会。",
+      delivery: "优化物流合作伙伴与配送流程，将配送痛点转化为履约体验的竞争优势。",
+      service: "加强客服团队培训与响应机制，将服务短板转化为客户关系深化的机会。",
+      convenience: "简化使用流程或说明，将便利性顾虑转化为产品易用性的卖点。",
+      design: "更新产品外观与品牌视觉语言，将设计短板转化为品牌焕新的契机。",
+      comfort: "改进产品的贴合度与舒适体验，将舒适度问题转化为差异化卖点。",
+      ingredients: "透明化配料信息并优化配方，将成分顾虑转化为健康信任的建立机会。"
     },
     en: {
-      price: { title: "Value Seeker", tags: ["Price-sensitive", "Deal-driven"],
-        describe: (c) => `Weighs cost against benefit before buying. Price-related themes appear in ${c} review(s), showing this segment pays close attention to value for money.` },
-      quality: { title: "Quality-Focused Buyer", tags: ["Detail-oriented", "Brand-loyal"],
-        describe: (c) => `Prioritizes durability and consistency. Quality-related themes appear in ${c} review(s), indicating shoppers who compare product standards closely.` },
-      convenience: { title: "Convenience Seeker", tags: ["Time-poor", "Practical"],
-        describe: (c) => `Values ease of use and portability. Convenience is mentioned in ${c} review(s), often in the context of on-the-go or busy lifestyles.` },
-      ingredients: { title: "Fitness and Health Consumer", tags: ["Health-focused", "Label-reader"],
-        describe: (c) => `Focused on nutrition and ingredient quality. Ingredient-related themes appear in ${c} review(s), reflecting health-conscious purchase decisions.` },
-      design: { title: "Design-Conscious Consumer", tags: ["Aesthetic-driven", "Image-aware"],
-        describe: (c) => `Notices visual presentation and style. Design is mentioned in ${c} review(s), suggesting aesthetics influence this segment's opinion.` }
+      price: "Introduce transparent pricing or value bundles, turning price concerns into a loyalty-building opportunity.",
+      quality: "Strengthen quality control processes, turning quality complaints into a word-of-mouth differentiator.",
+      taste: "Reformulate for improved taste, turning flavor feedback into a clear product iteration roadmap.",
+      packaging: "Upgrade packaging structure and visual design, turning packaging issues into a shelf-appeal opportunity.",
+      delivery: "Optimize logistics partners and fulfillment processes, turning delivery pain points into a fulfillment advantage.",
+      service: "Invest in customer service training and response systems, turning service gaps into a relationship-building opportunity.",
+      convenience: "Streamline usage or instructions, turning convenience concerns into an ease-of-use selling point.",
+      design: "Refresh product appearance and brand visual language, turning design gaps into a brand-refresh opportunity.",
+      comfort: "Improve product fit and comfort, turning comfort concerns into a differentiation point.",
+      ingredients: "Increase ingredient transparency and reformulate where needed, turning ingredient concerns into a trust-building opportunity."
+    }
+  };
+
+  const PERSONA_DEFINITIONS = {
+    zh: {
+      price: {
+        title: "价格敏感型消费者", tags: ["价格敏感", "追求性价比"],
+        ageRange: "25–40 岁",
+        motivation: "追求高性价比，希望花更少的钱获得同等甚至更好的体验。",
+        painPoints: "价格上涨、隐藏费用、感觉物无所值。",
+        purchaseDriver: "促销折扣、组合优惠、透明定价。",
+        communicationStyle: "直接、注重数据对比，喜欢看到价格与同类产品的对比信息。",
+        describe: (c) => `价格相关话题在 ${c} 条评论中被提及，显示该客群非常看重性价比。`
+      },
+      quality: {
+        title: "品质导向型消费者", tags: ["注重细节", "品牌忠诚"],
+        ageRange: "30–50 岁",
+        motivation: "看重产品的耐用性与一致性，愿意为更高品质支付溢价。",
+        painPoints: "质量不稳定、做工瑕疵、与宣传不符。",
+        purchaseDriver: "品牌口碑、质检认证、真实用户评价。",
+        communicationStyle: "偏理性，重视细节说明与权威背书。",
+        describe: (c) => `质量相关话题在 ${c} 条评论中被提及，表明该客群会仔细比较产品标准。`
+      },
+      convenience: {
+        title: "便利导向型消费者", tags: ["时间紧张", "务实"],
+        ageRange: "22–35 岁",
+        motivation: "生活节奏快，希望产品能节省时间、简化流程。",
+        painPoints: "使用步骤繁琐、携带不便、配送速度慢。",
+        purchaseDriver: "便捷的购买与使用体验、快速配送。",
+        communicationStyle: "偏好简洁明了的信息，容易被“省时省心”类信息打动。",
+        describe: (c) => `便利性话题在 ${c} 条评论中被提及，通常与忙碌的生活方式相关。`
+      },
+      ingredients: {
+        title: "健康健身型消费者", tags: ["注重健康", "关注成分表"],
+        ageRange: "20–38 岁",
+        motivation: "关注营养成分与健康效益，将购买视为自我投资的一部分。",
+        painPoints: "配料表不透明、添加剂过多、营养宣传夸大。",
+        purchaseDriver: "清晰的成分标签、第三方检测、健康背书。",
+        communicationStyle: "喜欢深入了解成分与数据，偏好专业、可信的表达方式。",
+        describe: (c) => `成分相关话题在 ${c} 条评论中被提及，反映出注重健康的购买决策。`
+      },
+      design: {
+        title: "设计审美型消费者", tags: ["注重美感", "在意品牌形象"],
+        ageRange: "24–40 岁",
+        motivation: "重视产品的视觉呈现与品牌形象，购买也是一种自我表达。",
+        painPoints: "设计过时、包装缺乏辨识度、与个人审美不符。",
+        purchaseDriver: "独特的视觉设计、限量或联名款、社交分享价值。",
+        communicationStyle: "视觉驱动，容易被精美的图片和故事化内容打动。",
+        describe: (c) => `设计相关话题在 ${c} 条评论中被提及，说明外观会影响该客群的评价。`
+      }
+    },
+    en: {
+      price: {
+        title: "Value Seeker", tags: ["Price-sensitive", "Deal-driven"],
+        ageRange: "25–40",
+        motivation: "Seeks the best value for money and wants an equal or better experience for less spend.",
+        painPoints: "Rising prices, hidden fees, feeling like it's not worth the cost.",
+        purchaseDriver: "Discounts, bundle deals, transparent pricing.",
+        communicationStyle: "Direct and comparison-driven; responds well to clear price-vs-value messaging.",
+        describe: (c) => `Price-related themes appear in ${c} review(s), showing this segment pays close attention to value for money.`
+      },
+      quality: {
+        title: "Quality-Focused Buyer", tags: ["Detail-oriented", "Brand-loyal"],
+        ageRange: "30–50",
+        motivation: "Values durability and consistency, and is willing to pay a premium for reliable quality.",
+        painPoints: "Inconsistent quality, manufacturing flaws, product not matching expectations.",
+        purchaseDriver: "Brand reputation, quality certifications, genuine user reviews.",
+        communicationStyle: "Rational and detail-oriented; responds to authoritative, evidence-based messaging.",
+        describe: (c) => `Quality-related themes appear in ${c} review(s), indicating shoppers who compare product standards closely.`
+      },
+      convenience: {
+        title: "Convenience Seeker", tags: ["Time-poor", "Practical"],
+        ageRange: "22–35",
+        motivation: "Has a busy lifestyle and wants products that save time and simplify daily routines.",
+        painPoints: "Complicated usage steps, poor portability, slow delivery.",
+        purchaseDriver: "A frictionless buying and usage experience, fast delivery.",
+        communicationStyle: "Prefers concise messaging; responds to 'save time, save effort' framing.",
+        describe: (c) => `Convenience is mentioned in ${c} review(s), often in the context of on-the-go or busy lifestyles.`
+      },
+      ingredients: {
+        title: "Fitness and Health Consumer", tags: ["Health-focused", "Label-reader"],
+        ageRange: "20–38",
+        motivation: "Focused on nutrition and health benefits; views the purchase as an investment in themselves.",
+        painPoints: "Unclear ingredient labeling, too many additives, overstated health claims.",
+        purchaseDriver: "Clear ingredient labels, third-party testing, credible health endorsements.",
+        communicationStyle: "Wants to dig into ingredients and data; prefers professional, trustworthy messaging.",
+        describe: (c) => `Ingredient-related themes appear in ${c} review(s), reflecting health-conscious purchase decisions.`
+      },
+      design: {
+        title: "Design-Conscious Consumer", tags: ["Aesthetic-driven", "Image-aware"],
+        ageRange: "24–40",
+        motivation: "Values visual presentation and brand image; purchasing is also a form of self-expression.",
+        painPoints: "Outdated design, packaging that lacks distinctiveness, mismatch with personal aesthetic.",
+        purchaseDriver: "Distinctive visual design, limited editions or collaborations, social sharing value.",
+        communicationStyle: "Visually driven; responds to beautiful imagery and storytelling.",
+        describe: (c) => `Design is mentioned in ${c} review(s), suggesting aesthetics influence this segment's opinion.`
+      }
     }
   };
 
@@ -437,7 +626,8 @@
     insightsData: null,
     personasData: null,
     actionPlanData: null,
-    stageStatus: { sentiment: "waiting", theme: "waiting", insight: "waiting", benchmark: "waiting" },
+    opportunitiesData: null,
+    stageStatus: { agent1: "waiting", agent2: "waiting", agent3: "waiting", output: "waiting" },
     currentErrorKey: null,
     lastLoadedHistoryEntry: null
   };
@@ -465,6 +655,8 @@
     dashboard: document.getElementById("dashboard"),
     dashboardMeta: document.getElementById("dashboard-meta"),
 
+    execSummaryBody: document.getElementById("exec-summary-body"),
+
     brandScoreCircle: document.getElementById("brand-score-circle"),
     brandScoreValue: document.getElementById("brand-score-value"),
     brandScoreSub: document.getElementById("brand-score-sub"),
@@ -476,15 +668,22 @@
     sentimentLegend: document.getElementById("sentiment-legend"),
 
     positiveThemes: document.getElementById("positive-themes"),
-    painPoints: document.getElementById("pain-points"),
 
     insightCards: document.getElementById("insight-cards"),
+
+    painPointCanvas: document.getElementById("pain-point-canvas"),
+    painPointEmpty: document.getElementById("pain-point-empty"),
+
+    opportunityCards: document.getElementById("opportunity-cards"),
+
     personaCards: document.getElementById("persona-cards"),
 
     thBrand: document.getElementById("th-brand"),
     thCompetitor: document.getElementById("th-competitor"),
     benchmarkBody: document.getElementById("benchmark-body"),
     benchmarkSummary: document.getElementById("benchmark-summary"),
+    strengthsList: document.getElementById("strengths-list"),
+    weaknessesList: document.getElementById("weaknesses-list"),
 
     actionHigh: document.getElementById("action-high"),
     actionMedium: document.getElementById("action-medium"),
@@ -492,12 +691,12 @@
 
     trendCanvas: document.getElementById("trend-canvas"),
     trendEmptyState: document.getElementById("trend-empty-state"),
-    trendLegend: document.getElementById("trend-legend"),
 
     historyList: document.getElementById("history-list")
   };
 
-  let lastHistorySnapshot = null;
+  let painPointChartInstance = null;
+  let trendChartInstance = null;
 
   /* -----------------------------------------------------
      6. TEXT MATCHING HELPERS (CJK-safe + word-boundary)
@@ -513,7 +712,6 @@
 
   function buildMatcher(word) {
     if (isCJK(word)) {
-      // Chinese has no whitespace word boundaries; use direct substring match.
       const w = word;
       return { test: (text) => text.indexOf(w) !== -1 };
     }
@@ -693,6 +891,16 @@
     return plan;
   }
 
+  function generateOpportunitiesData(brandA) {
+    const painPoints = getRankedThemes(brandA.themeStats, "negative");
+    return painPoints.slice(0, 4).map((pp, idx) => {
+      let impact = "low";
+      if (idx === 0) impact = "high";
+      else if (idx === 1) impact = "medium";
+      return { theme: pp.key, count: pp.count, impact };
+    });
+  }
+
   /* -----------------------------------------------------
      9. RENDERING (language-aware, driven by state.lang)
   ----------------------------------------------------- */
@@ -814,10 +1022,51 @@
       const tagsHtml = def.tags.map((tag) => `<span class="persona-tag">${tag}</span>`).join("");
       card.innerHTML = `
         <h4>${def.title}</h4>
-        <p>${def.describe(p.mentionCount)}</p>
+        <span class="persona-age">${t("personaAgeLabel")}: ${def.ageRange}</span>
+        <div class="persona-field">
+          <p class="pf-label">${t("personaMotivationLabel")}</p>
+          <p class="pf-text">${def.motivation}</p>
+        </div>
+        <div class="persona-field">
+          <p class="pf-label">${t("personaPainLabel")}</p>
+          <p class="pf-text">${def.painPoints}</p>
+        </div>
+        <div class="persona-field">
+          <p class="pf-label">${t("personaDriverLabel")}</p>
+          <p class="pf-text">${def.purchaseDriver}</p>
+        </div>
+        <div class="persona-field">
+          <p class="pf-label">${t("personaCommLabel")}</p>
+          <p class="pf-text">${def.communicationStyle}</p>
+        </div>
+        <p class="pf-text" style="font-style:italic; opacity:0.85;">${def.describe(p.mentionCount)}</p>
         <div class="persona-tags">${tagsHtml}</div>
       `;
       el.personaCards.appendChild(card);
+    });
+  }
+
+  function renderOpportunities(opportunitiesData) {
+    el.opportunityCards.innerHTML = "";
+    if (opportunitiesData.length === 0) {
+      el.opportunityCards.innerHTML = `<p class="empty-state-text">${t("noOpportunitiesText")}</p>`;
+      return;
+    }
+    const labels = THEME_LABELS[state.lang];
+    const templates = OPPORTUNITY_TEMPLATES[state.lang];
+    const impactLabelMap = { high: t("impactHigh"), medium: t("impactMedium"), low: t("impactLow") };
+    opportunitiesData.forEach((opp) => {
+      const card = document.createElement("div");
+      card.className = "opportunity-card";
+      card.innerHTML = `
+        <div class="opportunity-card-header">
+          <h4>${t("opportunityCardTitlePrefix")}: ${labels[opp.theme]}</h4>
+          <span class="impact-badge impact-${opp.impact}">${impactLabelMap[opp.impact]}</span>
+        </div>
+        <p>${templates[opp.theme]}</p>
+        <p class="opportunity-evidence">${t("opportunityEvidence")(opp.count)}</p>
+      `;
+      el.opportunityCards.appendChild(card);
     });
   }
 
@@ -846,6 +1095,21 @@
       `;
       el.benchmarkBody.appendChild(tr);
     });
+  }
+
+  function renderStrengthsWeaknesses(rows) {
+    const labels = BENCHMARK_LABELS[state.lang];
+    const comparable = rows.filter((r) => r.key !== "satisfaction" && r.gap !== null);
+    const strengths = comparable.filter((r) => r.gap > 0).sort((a, b) => b.gap - a.gap);
+    const weaknesses = comparable.filter((r) => r.gap < 0).sort((a, b) => a.gap - b.gap);
+
+    el.strengthsList.innerHTML = strengths.length
+      ? strengths.map((r) => `<li>${labels[r.key]} (+${r.gap})</li>`).join("")
+      : `<li class="empty-state-text">${t("noStrengthsText")}</li>`;
+
+    el.weaknessesList.innerHTML = weaknesses.length
+      ? weaknesses.map((r) => `<li>${labels[r.key]} (${r.gap})</li>`).join("")
+      : `<li class="empty-state-text">${t("noWeaknessesText")}</li>`;
   }
 
   function renderBenchmarkSummary(rows, brandName, competitorName) {
@@ -916,6 +1180,91 @@
     }
   }
 
+  /* -----------------------------------------------------
+     10. EXECUTIVE SUMMARY
+  ----------------------------------------------------- */
+
+  function buildExecutiveSummary() {
+    const brandA = state.brandAnalysis, compA = state.competitorAnalysis;
+    const brandName = state.brandName, competitorName = state.competitorName;
+    const labels = THEME_LABELS[state.lang];
+    const benchLabels = BENCHMARK_LABELS[state.lang];
+
+    const topPositive = getRankedThemes(brandA.themeStats, "positive")[0];
+    const topPain = getRankedThemes(brandA.themeStats, "negative")[0];
+    const comparable = state.benchmarkRows.filter((r) => r.key !== "satisfaction" && r.gap !== null);
+    const strongest = comparable.length ? comparable.reduce((a, b) => (a.gap > b.gap ? a : b)) : null;
+    const weakest = comparable.length ? comparable.reduce((a, b) => (a.gap < b.gap ? a : b)) : null;
+    const firstHighAction = state.actionPlanData.high[0] ? actionText(state.actionPlanData.high[0]) : null;
+    const gap = brandA.overallScore - compA.overallScore;
+
+    if (state.lang === "zh") {
+      const overview = `本次分析基于 ${brandA.total} 条 ${brandName} 评论与 ${compA.total} 条 ${competitorName} 评论。${brandName} 的总体满意度得分为 ${brandA.overallScore} 分，${competitorName} 为 ${compA.overallScore} 分，` +
+        (gap > 0 ? `${brandName} 领先 ${gap} 分。` : gap < 0 ? `${brandName} 落后 ${Math.abs(gap)} 分。` : `两者持平。`);
+      const strength = topPositive
+        ? `${labels[topPositive.key]}是客户最常称赞的方面，在 ${topPositive.count} 条评论中获得正面评价，可作为营销传播的核心卖点。`
+        : `本次评论中未发现特别突出的正面主题，建议持续收集更多客户反馈以识别优势领域。`;
+      const risk = topPain
+        ? `${labels[topPain.key]}是当前最主要的风险点，在 ${topPain.count} 条评论中被负面提及，需要优先关注以避免影响品牌口碑。`
+        : `本次评论中未发现明显的风险信号，整体反馈情况良好。`;
+      const position = strongest && strongest.gap > 0
+        ? `在「${benchLabels[strongest.key]}」方面相对 ${competitorName} 具备明显优势` + (weakest && weakest.gap < 0 ? `，但在「${benchLabels[weakest.key]}」方面存在差距，需要重点补强。` : `。`)
+        : (weakest && weakest.gap < 0 ? `在「${benchLabels[weakest.key]}」方面相对 ${competitorName} 存在差距，是需要优先补强的领域。` : `与 ${competitorName} 相比，各维度表现较为接近，尚未形成明显的差异化优势。`);
+      const recommendation = firstHighAction
+        ? firstHighAction
+        : `建议持续监测客户评论，保持当前的产品与服务标准，并定期复盘满意度变化趋势。`;
+
+      return { overview, strength, risk, position, recommendation };
+    } else {
+      const overview = `This analysis is based on ${brandA.total} reviews for ${brandName} and ${compA.total} reviews for ${competitorName}. ${brandName} scored ${brandA.overallScore} on overall satisfaction versus ${compA.overallScore} for ${competitorName}, ` +
+        (gap > 0 ? `putting ${brandName} ahead by ${gap} point(s).` : gap < 0 ? `putting ${brandName} behind by ${Math.abs(gap)} point(s).` : `putting the two brands at parity.`);
+      const strength = topPositive
+        ? `${labels[topPositive.key]} is the most consistently praised aspect of the brand, mentioned positively in ${topPositive.count} review(s), and is a strong candidate for marketing messaging.`
+        : `No single standout positive theme was detected in this batch of reviews; continue collecting feedback to identify clear strengths.`;
+      const risk = topPain
+        ? `${labels[topPain.key]} is the leading risk area, mentioned negatively in ${topPain.count} review(s), and should be prioritized to protect brand reputation.`
+        : `No significant risk signals were detected in this batch of reviews; overall feedback looks healthy.`;
+      const position = strongest && strongest.gap > 0
+        ? `${brandName} holds a clear lead over ${competitorName} in ${benchLabels[strongest.key]}` + (weakest && weakest.gap < 0 ? `, but trails in ${benchLabels[weakest.key]}, which should be a focus area.` : `.`)
+        : (weakest && weakest.gap < 0 ? `${brandName} trails ${competitorName} in ${benchLabels[weakest.key]}, making it the top priority for competitive catch-up.` : `${brandName} and ${competitorName} are closely matched across categories, with no clear differentiation yet.`);
+      const recommendation = firstHighAction
+        ? firstHighAction
+        : `Continue monitoring customer reviews, maintain current product and service standards, and periodically review satisfaction trends.`;
+
+      return { overview, strength, risk, position, recommendation };
+    }
+  }
+
+  function renderExecutiveSummary() {
+    const summary = buildExecutiveSummary();
+    el.execSummaryBody.innerHTML = `
+      <div class="exec-block">
+        <p class="exec-label">${t("execOverviewLabel")}</p>
+        <p class="exec-text">${summary.overview}</p>
+      </div>
+      <div class="exec-block">
+        <p class="exec-label">${t("execStrengthLabel")}</p>
+        <p class="exec-text">${summary.strength}</p>
+      </div>
+      <div class="exec-block">
+        <p class="exec-label">${t("execRiskLabel")}</p>
+        <p class="exec-text">${summary.risk}</p>
+      </div>
+      <div class="exec-block">
+        <p class="exec-label">${t("execPositionLabel")}</p>
+        <p class="exec-text">${summary.position}</p>
+      </div>
+      <div class="exec-block">
+        <p class="exec-label">${t("execRecommendationLabel")}</p>
+        <p class="exec-text">${summary.recommendation}</p>
+      </div>
+    `;
+  }
+
+  /* -----------------------------------------------------
+     11. FULL DASHBOARD RENDER
+  ----------------------------------------------------- */
+
   function renderFullDashboard() {
     if (!state.hasResults) return;
     renderDashboardMeta();
@@ -926,116 +1275,141 @@
 
     renderSentimentBars(state.brandAnalysis.sentimentPct);
     renderThemeList(el.positiveThemes, getRankedThemes(state.brandAnalysis.themeStats, "positive"), "positive");
-    renderThemeList(el.painPoints, getRankedThemes(state.brandAnalysis.themeStats, "negative"), "negative");
     renderInsights(state.insightsData);
+
+    renderPainPointChart();
+    renderOpportunities(state.opportunitiesData);
     renderPersonas(state.personasData);
+
     renderBenchmark(state.benchmarkRows, state.brandName, state.competitorName);
+    renderStrengthsWeaknesses(state.benchmarkRows);
     renderBenchmarkSummary(state.benchmarkRows, state.brandName, state.competitorName);
+
     renderActionPlan(state.actionPlanData);
+    renderExecutiveSummary();
   }
 
   /* -----------------------------------------------------
-     10. TREND CHART (native canvas, no external library)
+     12. CHARTS (Chart.js, CDN only)
   ----------------------------------------------------- */
 
-  function drawTrendChart(history) {
-    lastHistorySnapshot = history;
+  function hasChart() {
+    return typeof window.Chart !== "undefined";
+  }
 
+  function renderPainPointChart() {
+    const painPoints = getRankedThemes(state.brandAnalysis.themeStats, "negative").slice(0, 5);
+    const total = state.brandAnalysis.total;
+
+    if (painPoints.length === 0) {
+      el.painPointCanvas.classList.add("hidden");
+      el.painPointEmpty.classList.remove("hidden");
+      if (painPointChartInstance) {
+        painPointChartInstance.destroy();
+        painPointChartInstance = null;
+      }
+      return;
+    }
+    el.painPointCanvas.classList.remove("hidden");
+    el.painPointEmpty.classList.add("hidden");
+
+    const labels = THEME_LABELS[state.lang];
+    const chartLabels = painPoints.map((p) => labels[p.key]);
+    const chartData = painPoints.map((p) => Math.round((p.count / total) * 100));
+
+    if (!hasChart()) return;
+
+    if (painPointChartInstance) painPointChartInstance.destroy();
+
+    painPointChartInstance = new window.Chart(el.painPointCanvas.getContext("2d"), {
+      type: "bar",
+      data: {
+        labels: chartLabels,
+        datasets: [{
+          label: t("painPointChartAxisLabel"),
+          data: chartData,
+          backgroundColor: "#e0505b",
+          borderRadius: 6,
+          maxBarThickness: 34
+        }]
+      },
+      options: {
+        indexAxis: "y",
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { beginAtZero: true, max: 100, ticks: { callback: (v) => v + "%" }, grid: { color: "#e4e6ef" } },
+          y: { grid: { display: false } }
+        }
+      }
+    });
+  }
+
+  function drawTrendChart(history) {
     if (!history || history.length < 2) {
       el.trendCanvas.classList.add("hidden");
       el.trendEmptyState.classList.remove("hidden");
-      el.trendLegend.innerHTML = "";
+      if (trendChartInstance) {
+        trendChartInstance.destroy();
+        trendChartInstance = null;
+      }
       return;
     }
     el.trendCanvas.classList.remove("hidden");
     el.trendEmptyState.classList.add("hidden");
 
+    if (!hasChart()) return;
+
     const chronological = history.slice().reverse();
-    const canvas = el.trendCanvas;
-    const ratio = window.devicePixelRatio || 1;
-    const cssWidth = canvas.parentElement.clientWidth;
-    const cssHeight = 220;
-
-    canvas.style.width = cssWidth + "px";
-    canvas.style.height = cssHeight + "px";
-    canvas.width = cssWidth * ratio;
-    canvas.height = cssHeight * ratio;
-
-    const ctx = canvas.getContext("2d");
-    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-    ctx.clearRect(0, 0, cssWidth, cssHeight);
-
-    const paddingLeft = 36;
-    const paddingRight = 16;
-    const paddingTop = 16;
-    const paddingBottom = 30;
-    const chartWidth = cssWidth - paddingLeft - paddingRight;
-    const chartHeight = cssHeight - paddingTop - paddingBottom;
-
-    ctx.strokeStyle = "#e4e6ef";
-    ctx.fillStyle = "#6b7186";
-    ctx.font = "11px Arial";
-    ctx.lineWidth = 1;
-
-    [0, 25, 50, 75, 100].forEach((val) => {
-      const y = paddingTop + chartHeight - (val / 100) * chartHeight;
-      ctx.beginPath();
-      ctx.moveTo(paddingLeft, y);
-      ctx.lineTo(paddingLeft + chartWidth, y);
-      ctx.stroke();
-      ctx.fillText(String(val), 4, y + 4);
-    });
-
-    const n = chronological.length;
-    const stepX = n > 1 ? chartWidth / (n - 1) : 0;
-
-    function plotLine(field, color) {
-      ctx.beginPath();
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 2.5;
-      chronological.forEach((entry, i) => {
-        const x = paddingLeft + stepX * i;
-        const y = paddingTop + chartHeight - (entry[field] / 100) * chartHeight;
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      });
-      ctx.stroke();
-      ctx.fillStyle = color;
-      chronological.forEach((entry, i) => {
-        const x = paddingLeft + stepX * i;
-        const y = paddingTop + chartHeight - (entry[field] / 100) * chartHeight;
-        ctx.beginPath();
-        ctx.arc(x, y, 3.5, 0, Math.PI * 2);
-        ctx.fill();
-      });
-    }
-
-    plotLine("competitorScore", "#3c4568");
-    plotLine("brandScore", "#6c5ce7");
-
-    ctx.fillStyle = "#6b7186";
-    ctx.font = "10px Arial";
-    const labelEvery = Math.ceil(n / 6);
-    chronological.forEach((entry, i) => {
-      if (i % labelEvery !== 0 && i !== n - 1) return;
-      const x = paddingLeft + stepX * i;
+    const labels = chronological.map((entry) => {
       const d = new Date(entry.date);
-      const label = (d.getMonth() + 1) + "/" + d.getDate();
-      ctx.fillText(label, x - 10, cssHeight - 8);
+      return (d.getMonth() + 1) + "/" + d.getDate();
     });
+    const brandData = chronological.map((entry) => entry.brandScore);
+    const compData = chronological.map((entry) => entry.competitorScore);
 
-    el.trendLegend.innerHTML = `
-      <span class="legend-item"><span class="legend-dot" style="background:#6c5ce7"></span>${t("historyYouLabel")}</span>
-      <span class="legend-item"><span class="legend-dot" style="background:#3c4568"></span>${t("historyCompetitorLabel")}</span>
-    `;
+    if (trendChartInstance) trendChartInstance.destroy();
+
+    trendChartInstance = new window.Chart(el.trendCanvas.getContext("2d"), {
+      type: "line",
+      data: {
+        labels,
+        datasets: [
+          {
+            label: t("trendBrandLabel"),
+            data: brandData,
+            borderColor: "#6c5ce7",
+            backgroundColor: "rgba(108, 92, 231, 0.12)",
+            tension: 0.3,
+            fill: true,
+            pointRadius: 3.5
+          },
+          {
+            label: t("trendCompetitorLabel"),
+            data: compData,
+            borderColor: "#3c4568",
+            backgroundColor: "rgba(60, 69, 104, 0.08)",
+            tension: 0.3,
+            fill: true,
+            pointRadius: 3.5
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: true, position: "bottom" } },
+        scales: {
+          y: { beginAtZero: true, max: 100, grid: { color: "#e4e6ef" } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
   }
 
-  window.addEventListener("resize", () => {
-    if (lastHistorySnapshot) drawTrendChart(lastHistorySnapshot);
-  });
-
   /* -----------------------------------------------------
-     11. HISTORY (localStorage)
+     13. HISTORY (localStorage)
   ----------------------------------------------------- */
 
   function loadHistory() {
@@ -1093,7 +1467,7 @@
 
   function loadFromHistory(entry) {
     state.lastLoadedHistoryEntry = entry;
-    state.hasResults = false; // history entries do not carry full re-renderable detail
+    state.hasResults = false;
 
     el.dashboard.classList.remove("hidden");
     const locale = state.lang === "zh" ? "zh-CN" : "en-US";
@@ -1105,13 +1479,15 @@
     el.competitorScoreSub.textContent = entry.competitorName;
 
     renderSentimentBars(entry.brandSentiment);
-
     renderThemeList(el.positiveThemes, entry.topPositiveTheme ? [entry.topPositiveTheme] : [], "positive");
-    renderThemeList(el.painPoints, entry.topPainPoint ? [entry.topPainPoint] : [], "negative");
 
     el.insightCards.innerHTML = `<div class="insight-card"><p class="insight-label">${state.lang === "zh" ? "历史快照" : "Historical Snapshot"}</p><p class="insight-text">${t("historyDetailNote")}</p></div>`;
+    el.execSummaryBody.innerHTML = `<div class="exec-block"><p class="exec-text">${t("execSummaryHistoryNote")}</p></div>`;
+    el.opportunityCards.innerHTML = `<p class="empty-state-text">${t("opportunityHistoryNote")}</p>`;
     el.personaCards.innerHTML = `<p class="empty-state-text">${t("personaHistoryNote")}</p>`;
     el.benchmarkBody.innerHTML = `<tr><td colspan="4" class="empty-state-text">${t("benchmarkHistoryNote")}</td></tr>`;
+    el.strengthsList.innerHTML = "";
+    el.weaknessesList.innerHTML = "";
     el.thBrand.textContent = entry.brandName;
     el.thCompetitor.textContent = entry.competitorName;
     el.benchmarkSummary.textContent = "";
@@ -1119,11 +1495,15 @@
     el.actionMedium.innerHTML = "";
     el.actionLow.innerHTML = `<li>${t("actionHistoryNote")}</li>`;
 
+    if (painPointChartInstance) { painPointChartInstance.destroy(); painPointChartInstance = null; }
+    el.painPointCanvas.classList.add("hidden");
+    el.painPointEmpty.classList.remove("hidden");
+
     window.scrollTo({ top: el.dashboard.offsetTop - 20, behavior: "smooth" });
   }
 
   /* -----------------------------------------------------
-     12. STAGE ANIMATION
+     14. STAGE ANIMATION
   ----------------------------------------------------- */
 
   function wait(ms) {
@@ -1131,10 +1511,12 @@
   }
 
   function renderStageStatuses() {
-    ["sentiment", "theme", "insight", "benchmark"].forEach((key) => {
+    ["agent1", "agent2", "agent3", "output"].forEach((key) => {
       const statusEl = el.stageTracker.querySelector(`[data-stage-status="${key}"]`);
       const status = state.stageStatus[key];
-      statusEl.textContent = status === "waiting" ? t("statusWaiting") : status === "analysing" ? t("statusAnalysing") : t("statusComplete");
+      if (status === "waiting") statusEl.textContent = t("statusWaiting");
+      else if (status === "analysing") statusEl.textContent = key === "output" ? t("statusGenerating") : t("statusAnalysing");
+      else statusEl.textContent = t("statusComplete");
     });
   }
 
@@ -1164,7 +1546,7 @@
   }
 
   /* -----------------------------------------------------
-     13. MAIN WORKFLOW
+     15. MAIN WORKFLOW
   ----------------------------------------------------- */
 
   async function runAnalysis() {
@@ -1190,10 +1572,10 @@
     resetStages();
     el.progressSection.scrollIntoView({ behavior: "smooth", block: "start" });
 
-    await runStage("sentiment");
-    await runStage("theme");
-    await runStage("insight");
-    await runStage("benchmark");
+    await runStage("agent1");
+    await runStage("agent2");
+    await runStage("agent3");
+    await runStage("output");
 
     const brandA = analyseReviews(brandLines);
     const compA = analyseReviews(competitorLines);
@@ -1201,6 +1583,7 @@
     const insightsData = generateInsightsData(brandA, compA, benchmarkRows);
     const personasData = generatePersonasData(brandA);
     const actionPlanData = generateActionPlanData(brandA);
+    const opportunitiesData = generateOpportunitiesData(brandA);
 
     state.hasResults = true;
     state.brandName = brandName;
@@ -1211,6 +1594,7 @@
     state.insightsData = insightsData;
     state.personasData = personasData;
     state.actionPlanData = actionPlanData;
+    state.opportunitiesData = opportunitiesData;
 
     el.dashboard.classList.remove("hidden");
     renderFullDashboard();
@@ -1238,7 +1622,7 @@
   }
 
   /* -----------------------------------------------------
-     14. LANGUAGE SWITCHING
+     16. LANGUAGE SWITCHING
   ----------------------------------------------------- */
 
   function applyStaticTranslations() {
@@ -1246,7 +1630,8 @@
 
     document.querySelectorAll("[data-i18n]").forEach((elNode) => {
       const key = elNode.getAttribute("data-i18n");
-      elNode.textContent = t(key);
+      const val = t(key);
+      if (typeof val === "string") elNode.textContent = val;
     });
 
     document.querySelectorAll("[data-i18n-placeholder]").forEach((elNode) => {
@@ -1286,7 +1671,7 @@
   }
 
   /* -----------------------------------------------------
-     15. EVENT WIRING
+     17. EVENT WIRING
   ----------------------------------------------------- */
 
   el.btnAnalyse.addEventListener("click", runAnalysis);
@@ -1314,8 +1699,13 @@
   el.langBtnZh.addEventListener("click", () => setLanguage("zh"));
   el.langBtnEn.addEventListener("click", () => setLanguage("en"));
 
+  window.addEventListener("resize", () => {
+    // Chart.js handles its own responsive resizing via the `responsive: true` option,
+    // so no manual redraw wiring is required here.
+  });
+
   /* -----------------------------------------------------
-     16. INITIAL LOAD
+     18. INITIAL LOAD
   ----------------------------------------------------- */
 
   (function init() {

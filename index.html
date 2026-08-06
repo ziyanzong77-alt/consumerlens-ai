@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>ConsumerLens AI</title>
 <link rel="stylesheet" href="styles.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -32,6 +33,68 @@
 <main class="page-wrap">
 
   <p class="hero-desc" data-i18n="heroDesc">将消费者评论转化为可执行的商业洞察。</p>
+
+  <!-- ===================== AI WORKFLOW VISUALIZATION ===================== -->
+  <section class="workflow-card" id="workflow-section">
+    <h2 class="workflow-title" data-i18n="wfTitle">AI 智能分析工作流</h2>
+    <p class="workflow-subtitle" data-i18n="wfSubtitle">四步本地 AI 代理管道，将原始评论转化为可执行的商业建议</p>
+
+    <div class="workflow-track">
+      <div class="workflow-node node-io">
+        <div class="node-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 4h16v12H7l-3 3V4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        </div>
+        <p class="node-title" data-i18n="wfNodeReviews">消费者评论</p>
+      </div>
+
+      <div class="workflow-arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h14m0 0l-5-5m5 5l-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <div class="workflow-node node-agent">
+        <div class="node-icon">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M5 20c1-3.5 4-5.5 7-5.5s6 2 7 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <p class="node-eyebrow">Agent 1</p>
+        <p class="node-title" data-i18n="wfAgent1Sub">语音解析器</p>
+      </div>
+
+      <div class="workflow-arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h14m0 0l-5-5m5 5l-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <div class="workflow-node node-agent">
+        <div class="node-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4L12 3z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        </div>
+        <p class="node-eyebrow">Agent 2</p>
+        <p class="node-title" data-i18n="wfAgent2Sub">消费者洞察生成器</p>
+      </div>
+
+      <div class="workflow-arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h14m0 0l-5-5m5 5l-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <div class="workflow-node node-agent">
+        <div class="node-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 19V9m6 10V4m6 15v-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <p class="node-eyebrow">Agent 3</p>
+        <p class="node-title" data-i18n="wfAgent3Sub">竞争情报分析</p>
+      </div>
+
+      <div class="workflow-arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h14m0 0l-5-5m5 5l-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <div class="workflow-node node-io node-output">
+        <div class="node-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p class="node-title" data-i18n="wfNodeOutput">业务建议</p>
+      </div>
+    </div>
+  </section>
 
   <!-- ===================== INPUT SECTION ===================== -->
   <section class="card" id="input-section">
@@ -80,32 +143,32 @@
       <p class="card-subtext" data-i18n="progressSectionSubtext">所有分析均在您的浏览器本地完成，基于规则的文本分析技术，不调用任何外部服务。</p>
     </div>
     <div class="stage-tracker" id="stage-tracker">
-      <div class="stage" data-stage="sentiment">
+      <div class="stage" data-stage="agent1">
         <div class="stage-icon">1</div>
         <div class="stage-info">
-          <h3 data-i18n="agent1Name">Agent 1：情感分析</h3>
-          <p class="stage-status" data-stage-status="sentiment">等待中</p>
+          <h3 data-i18n="agent1Name">Agent 1：语音解析器</h3>
+          <p class="stage-status" data-stage-status="agent1">等待中</p>
         </div>
       </div>
-      <div class="stage" data-stage="theme">
+      <div class="stage" data-stage="agent2">
         <div class="stage-icon">2</div>
         <div class="stage-info">
-          <h3 data-i18n="agent2Name">Agent 2：主题发现</h3>
-          <p class="stage-status" data-stage-status="theme">等待中</p>
+          <h3 data-i18n="agent2Name">Agent 2：消费者洞察生成器</h3>
+          <p class="stage-status" data-stage-status="agent2">等待中</p>
         </div>
       </div>
-      <div class="stage" data-stage="insight">
+      <div class="stage" data-stage="agent3">
         <div class="stage-icon">3</div>
         <div class="stage-info">
-          <h3 data-i18n="agent3Name">Agent 3：消费者洞察</h3>
-          <p class="stage-status" data-stage-status="insight">等待中</p>
+          <h3 data-i18n="agent3Name">Agent 3：竞争情报分析</h3>
+          <p class="stage-status" data-stage-status="agent3">等待中</p>
         </div>
       </div>
-      <div class="stage" data-stage="benchmark">
+      <div class="stage" data-stage="output">
         <div class="stage-icon">4</div>
         <div class="stage-info">
-          <h3 data-i18n="agent4Name">Agent 4：竞争对标</h3>
-          <p class="stage-status" data-stage-status="benchmark">等待中</p>
+          <h3 data-i18n="wfNodeOutput">业务建议</h3>
+          <p class="stage-status" data-stage-status="output">等待中</p>
         </div>
       </div>
     </div>
@@ -117,6 +180,15 @@
     <div class="section-title-row">
       <h2 data-i18n="dashboardTitle">结果仪表盘</h2>
       <span class="muted" id="dashboard-meta"></span>
+    </div>
+
+    <!-- Executive Summary -->
+    <div class="card exec-summary-card">
+      <div class="exec-summary-header">
+        <h3 class="block-title" data-i18n="execSummaryTitle">高管摘要</h3>
+        <p class="card-subtext" data-i18n="execSummarySubtitle">适合市场经理阅读的简明报告</p>
+      </div>
+      <div id="exec-summary-body" class="exec-summary-body"></div>
     </div>
 
     <!-- Overview -->
@@ -144,16 +216,10 @@
       </div>
     </div>
 
-    <!-- Themes -->
-    <div class="grid grid-2">
-      <div class="card">
-        <h3 class="block-title" data-i18n="topPositiveThemesTitle">主要正面主题</h3>
-        <div id="positive-themes" class="theme-list"></div>
-      </div>
-      <div class="card">
-        <h3 class="block-title" data-i18n="painPointsTitle">核心痛点</h3>
-        <div id="pain-points" class="theme-list"></div>
-      </div>
+    <!-- Top Positive Themes -->
+    <div class="card">
+      <h3 class="block-title" data-i18n="topPositiveThemesTitle">主要正面主题</h3>
+      <div id="positive-themes" class="theme-list"></div>
     </div>
 
     <!-- Insights -->
@@ -162,16 +228,35 @@
       <div id="insight-cards" class="insight-grid"></div>
     </div>
 
-    <!-- Personas -->
+    <!-- Pain Point Dashboard -->
+    <div class="card">
+      <h3 class="block-title" data-i18n="painPointDashboardTitle">痛点仪表盘</h3>
+      <p class="card-subtext" data-i18n="painPointDashboardSubtitle">自动汇总本品牌评论中最主要的五大痛点</p>
+      <div class="chart-wrap">
+        <canvas id="pain-point-canvas" height="220"></canvas>
+      </div>
+      <div id="pain-point-empty" class="empty-state hidden">
+        <p data-i18n="noPainPointsText">未在这些评论中检测到明显的负面主题。</p>
+      </div>
+    </div>
+
+    <!-- Opportunity Dashboard -->
+    <div class="card">
+      <h3 class="block-title" data-i18n="opportunityDashboardTitle">机会仪表盘</h3>
+      <p class="card-subtext" data-i18n="opportunityDashboardSubtitle">基于客户投诉自动生成的改进机会</p>
+      <div id="opportunity-cards" class="opportunity-grid"></div>
+    </div>
+
+    <!-- Consumer Persona -->
     <div class="card">
       <h3 class="block-title" data-i18n="personasTitle">消费者画像</h3>
-      <p class="card-subtext" data-i18n="personasSubtext">仅展示评论中有证据支持的消费者画像。</p>
+      <p class="card-subtext" data-i18n="personasSubtext">仅展示评论中有证据支持的消费者画像；以下属性为基于语言模式推断的典型特征，并非从评论者收集的真实人口统计数据。</p>
       <div id="persona-cards" class="persona-grid"></div>
     </div>
 
-    <!-- Competitor benchmark -->
+    <!-- Competitive Gap -->
     <div class="card">
-      <h3 class="block-title" data-i18n="benchmarkTitle">竞争对标</h3>
+      <h3 class="block-title" data-i18n="competitiveGapTitle">竞争差距分析</h3>
       <div class="table-wrap">
         <table class="benchmark-table" id="benchmark-table">
           <thead>
@@ -185,10 +270,22 @@
           <tbody id="benchmark-body"></tbody>
         </table>
       </div>
+
+      <div class="gap-grid">
+        <div class="gap-col gap-strengths">
+          <h4 data-i18n="strengthsTitle">我们的优势</h4>
+          <ul id="strengths-list"></ul>
+        </div>
+        <div class="gap-col gap-weaknesses">
+          <h4 data-i18n="weaknessesTitle">我们的劣势</h4>
+          <ul id="weaknesses-list"></ul>
+        </div>
+      </div>
+
       <p class="insight-summary" id="benchmark-summary"></p>
     </div>
 
-    <!-- Action plan -->
+    <!-- Action plan / Business Recommendation -->
     <div class="card">
       <h3 class="block-title" data-i18n="actionPlanTitle">优先行动计划</h3>
       <div class="action-grid">
@@ -214,8 +311,9 @@
       <div id="trend-empty-state" class="empty-state hidden">
         <p data-i18n="trendEmptyText">完成至少两次分析后，这里将显示趋势折线图。每次完成的分析都会自动保存到您浏览器的本地历史记录中。</p>
       </div>
-      <canvas id="trend-canvas" height="220"></canvas>
-      <div class="legend" id="trend-legend"></div>
+      <div class="chart-wrap">
+        <canvas id="trend-canvas" height="220"></canvas>
+      </div>
     </div>
 
   </section>

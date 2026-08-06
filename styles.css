@@ -1,7 +1,6 @@
 /* =====================================================
-   ConsumerLens AI — Stylesheet
-   Design: white/soft-grey background, dark navy text,
-   subtle purple accent, rounded cards, generous spacing.
+   ConsumerLens AI — Stylesheet (V2)
+   Modern SaaS, purple gradient, Apple-inspired polish.
 ===================================================== */
 
 :root {
@@ -13,6 +12,7 @@
   --purple: #6c5ce7;
   --purple-dark: #5a48d4;
   --purple-light: #efecfd;
+  --purple-2: #9b8cf2;
   --green: #1fa971;
   --green-bg: #e7f8f1;
   --red: #e0505b;
@@ -20,11 +20,12 @@
   --amber: #d98c1f;
   --amber-bg: #fdf3e3;
   --grey-text: #6b7186;
-  --radius-lg: 16px;
-  --radius-md: 12px;
-  --radius-sm: 8px;
-  --shadow: 0 2px 10px rgba(27, 35, 64, 0.06);
-  --shadow-hover: 0 6px 20px rgba(27, 35, 64, 0.10);
+  --radius-lg: 18px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --shadow: 0 2px 12px rgba(27, 35, 64, 0.06);
+  --shadow-hover: 0 10px 28px rgba(27, 35, 64, 0.12);
+  --gradient-purple: linear-gradient(135deg, #7c6ff0 0%, #6c5ce7 45%, #5a48d4 100%);
   font-size: 16px;
 }
 
@@ -40,10 +41,11 @@ html, body {
 body {
   background: var(--grey-bg);
   color: var(--navy);
-  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "PingFang SC",
-    "Microsoft YaHei", "Inter", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+    "Segoe UI", "PingFang SC", "Microsoft YaHei", "Inter", Roboto, Helvetica, Arial, sans-serif;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.01em;
 }
 
 .hidden {
@@ -53,7 +55,9 @@ body {
 /* ===================== HEADER ===================== */
 
 .app-header {
-  background: var(--white);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
   border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
@@ -81,7 +85,7 @@ body {
   width: 44px;
   height: 44px;
   border-radius: var(--radius-sm);
-  background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+  background: var(--gradient-purple);
   color: #fff;
   display: flex;
   align-items: center;
@@ -90,6 +94,7 @@ body {
   font-size: 15px;
   letter-spacing: 0.5px;
   flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(108, 92, 231, 0.35);
 }
 
 .app-header h1 {
@@ -97,6 +102,7 @@ body {
   font-size: 20px;
   font-weight: 700;
   color: var(--navy);
+  letter-spacing: -0.02em;
 }
 
 .subtitle {
@@ -150,7 +156,7 @@ body {
 }
 
 .lang-btn.active {
-  background: var(--purple);
+  background: var(--gradient-purple);
   color: #fff;
   box-shadow: 0 2px 8px rgba(108, 92, 231, 0.35);
 }
@@ -168,7 +174,7 @@ body {
 
 .hero-desc {
   margin: -10px 0 0;
-  font-size: 15px;
+  font-size: 16px;
   color: var(--grey-text);
 }
 
@@ -224,8 +230,9 @@ body {
 
 .section-title-row h2 {
   margin: 0;
-  font-size: 22px;
+  font-size: 23px;
   font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 .muted {
@@ -235,9 +242,144 @@ body {
 
 .block-title {
   margin: 0 0 14px;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 700;
   color: var(--navy);
+  letter-spacing: -0.01em;
+}
+
+/* ===================== AI WORKFLOW VISUALIZATION ===================== */
+
+.workflow-card {
+  background: var(--gradient-purple);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  box-shadow: 0 14px 34px rgba(90, 72, 212, 0.28);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.workflow-card::before {
+  content: "";
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 220px;
+  height: 220px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+}
+
+.workflow-title {
+  margin: 0 0 4px;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  position: relative;
+}
+
+.workflow-subtitle {
+  margin: 0 0 26px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+  position: relative;
+}
+
+.workflow-track {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  position: relative;
+}
+
+.workflow-node {
+  flex: 1 1 140px;
+  min-width: 128px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--radius-md);
+  padding: 16px 14px;
+  text-align: center;
+  backdrop-filter: blur(6px);
+}
+
+.workflow-node.node-io {
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--navy);
+}
+
+.workflow-node.node-output {
+  background: #ffffff;
+  color: var(--purple-dark);
+  font-weight: 700;
+}
+
+.node-icon {
+  width: 34px;
+  height: 34px;
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.node-icon svg {
+  width: 22px;
+  height: 22px;
+  color: inherit;
+}
+
+.workflow-node.node-agent .node-icon {
+  color: #fff;
+}
+
+.workflow-node.node-io .node-icon {
+  color: var(--purple-dark);
+}
+
+.node-eyebrow {
+  margin: 0 0 2px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  opacity: 0.85;
+}
+
+.node-title {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.workflow-arrow {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.workflow-arrow svg {
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 800px) {
+  .workflow-track {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .workflow-arrow {
+    transform: rotate(90deg);
+    align-self: center;
+  }
+  .workflow-node {
+    width: 100%;
+  }
 }
 
 /* ===================== FORM ELEMENTS ===================== */
@@ -309,7 +451,7 @@ body {
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.08s ease, box-shadow 0.15s ease, background 0.15s ease;
+  transition: transform 0.08s ease, box-shadow 0.15s ease, background 0.15s ease, opacity 0.15s ease;
   font-family: inherit;
 }
 
@@ -317,14 +459,19 @@ body {
   transform: translateY(1px);
 }
 
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .btn-primary {
-  background: var(--purple);
+  background: var(--gradient-purple);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+  box-shadow: 0 4px 14px rgba(108, 92, 231, 0.35);
 }
 
 .btn-primary:hover {
-  background: var(--purple-dark);
+  box-shadow: 0 6px 18px rgba(108, 92, 231, 0.45);
 }
 
 .btn-secondary {
@@ -400,7 +547,7 @@ body {
 
 .stage-info h3 {
   margin: 0 0 2px;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
   color: var(--navy);
 }
@@ -439,6 +586,46 @@ body {
 
 .stage.is-complete .stage-status {
   color: var(--green);
+}
+
+/* ===================== EXECUTIVE SUMMARY ===================== */
+
+.exec-summary-card {
+  background: linear-gradient(180deg, var(--purple-light) 0%, var(--white) 55%);
+  border-color: rgba(108, 92, 231, 0.25);
+}
+
+.exec-summary-header {
+  margin-bottom: 8px;
+}
+
+.exec-summary-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.exec-block {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(108, 92, 231, 0.15);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+}
+
+.exec-block .exec-label {
+  margin: 0 0 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--purple-dark);
+}
+
+.exec-block p.exec-text {
+  margin: 0;
+  font-size: 14.5px;
+  color: var(--navy);
+  line-height: 1.7;
 }
 
 /* ===================== METRIC / SCORE ===================== */
@@ -618,6 +805,18 @@ body {
   margin: 0;
 }
 
+/* ===================== CHART CONTAINERS ===================== */
+
+.chart-wrap {
+  position: relative;
+  width: 100%;
+}
+
+#pain-point-canvas, #trend-canvas {
+  width: 100% !important;
+  max-width: 100%;
+}
+
 /* ===================== INSIGHT CARDS ===================== */
 
 .insight-grid {
@@ -655,6 +854,79 @@ body {
   font-weight: 500;
 }
 
+/* ===================== OPPORTUNITY DASHBOARD ===================== */
+
+.opportunity-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 800px) {
+  .opportunity-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.opportunity-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  background: linear-gradient(180deg, var(--green-bg) 0%, var(--white) 65%);
+}
+
+.opportunity-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.opportunity-card h4 {
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.impact-badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.impact-high {
+  background: var(--red-bg);
+  color: var(--red);
+}
+
+.impact-medium {
+  background: var(--amber-bg);
+  color: var(--amber);
+}
+
+.impact-low {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.opportunity-card p {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: var(--navy-soft);
+}
+
+.opportunity-evidence {
+  font-size: 11.5px;
+  color: var(--grey-text);
+  font-weight: 600;
+}
+
 /* ===================== PERSONAS ===================== */
 
 .persona-grid {
@@ -677,22 +949,50 @@ body {
 }
 
 .persona-card h4 {
-  margin: 0 0 8px;
-  font-size: 15px;
+  margin: 0 0 4px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--navy);
 }
 
-.persona-card p {
-  margin: 0 0 10px;
-  font-size: 13px;
+.persona-age {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--purple-dark);
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--purple-light);
+  padding: 2px 9px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+.persona-field {
+  margin-bottom: 10px;
+}
+
+.persona-field .pf-label {
+  margin: 0 0 2px;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
   color: var(--navy-soft);
+  opacity: 0.75;
+}
+
+.persona-field p.pf-text {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--navy-soft);
+  line-height: 1.55;
 }
 
 .persona-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+  margin-top: 12px;
 }
 
 .persona-tag {
@@ -755,6 +1055,57 @@ body {
 .gap-neutral {
   color: var(--grey-text);
   font-weight: 700;
+}
+
+.gap-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+@media (max-width: 800px) {
+  .gap-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gap-col {
+  border-radius: var(--radius-md);
+  padding: 16px;
+  border: 1px solid var(--border);
+}
+
+.gap-col h4 {
+  margin: 0 0 10px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-weight: 700;
+}
+
+.gap-col ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  color: var(--navy-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gap-strengths {
+  background: var(--green-bg);
+}
+.gap-strengths h4 {
+  color: var(--green);
+}
+
+.gap-weaknesses {
+  background: var(--red-bg);
+}
+.gap-weaknesses h4 {
+  color: var(--red);
 }
 
 .insight-summary {
@@ -825,13 +1176,7 @@ body {
   color: var(--green);
 }
 
-/* ===================== TREND CHART ===================== */
-
-#trend-canvas {
-  width: 100%;
-  max-width: 100%;
-  display: block;
-}
+/* ===================== EMPTY STATES ===================== */
 
 .empty-state {
   background: var(--grey-bg);
@@ -956,7 +1301,7 @@ body {
     gap: 18px;
   }
 
-  .card {
+  .card, .workflow-card {
     padding: 16px;
     border-radius: var(--radius-md);
   }
@@ -1009,5 +1354,9 @@ body {
   .history-scores {
     width: 100%;
     justify-content: flex-start;
+  }
+
+  .workflow-title {
+    font-size: 18px;
   }
 }
