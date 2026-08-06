@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ConsumerLens AI</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ===================== HEADER ===================== -->
+<header class="app-header">
+  <div class="header-inner">
+    <div class="brand-mark">
+      <div class="logo-badge">CL</div>
+      <div>
+        <h1>ConsumerLens AI</h1>
+        <p class="subtitle" data-i18n="tagline">消费者之声与竞争洞察平台</p>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <span class="tag-badge" data-i18n="tagBadge">本地运行 · 无需API · 零成本</span>
+      <div class="lang-toggle" id="lang-toggle">
+        <button type="button" class="lang-btn" data-lang="zh" id="lang-btn-zh">中文</button>
+        <button type="button" class="lang-btn" data-lang="en" id="lang-btn-en">English</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="page-wrap">
+
+  <p class="hero-desc" data-i18n="heroDesc">将消费者评论转化为可执行的商业洞察。</p>
+
+  <!-- ===================== INPUT SECTION ===================== -->
+  <section class="card" id="input-section">
+    <div class="card-header">
+      <h2 data-i18n="inputSectionTitle">1. 输入评论进行分析</h2>
+      <p class="card-subtext" data-i18n="inputSectionSubtext">粘贴真实或示例客户评论，每条评论请单独占一行。建议每个品牌至少输入 3 条评论，以获得有意义的分析结果。</p>
+    </div>
+
+    <div class="input-grid">
+      <div class="field">
+        <label for="brand-name" data-i18n="labelBrandName">品牌名称</label>
+        <input type="text" id="brand-name" data-i18n-placeholder="placeholderBrandName" placeholder="例如：纯萃蛋白" />
+      </div>
+      <div class="field">
+        <label for="competitor-name" data-i18n="labelCompetitorName">竞品名称</label>
+        <input type="text" id="competitor-name" data-i18n-placeholder="placeholderCompetitorName" placeholder="例如：劲能营养棒" />
+      </div>
+    </div>
+
+    <div class="input-grid">
+      <div class="field">
+        <label for="brand-reviews" data-i18n="labelBrandReviews">本品牌消费者评论</label>
+        <p class="field-hint" data-i18n="lineHint">每条评论单独占一行</p>
+        <textarea id="brand-reviews" rows="8" data-i18n-placeholder="placeholderBrandReviews" placeholder="每条评论单独占一行...&#10;例如：&#10;口感很好，比其他蛋白棒好吃很多。&#10;配送晚了，包装也有点破损。"></textarea>
+      </div>
+      <div class="field">
+        <label for="competitor-reviews" data-i18n="labelCompetitorReviews">竞品消费者评论</label>
+        <p class="field-hint" data-i18n="lineHint">每条评论单独占一行</p>
+        <textarea id="competitor-reviews" rows="8" data-i18n-placeholder="placeholderCompetitorReviews" placeholder="每条评论单独占一行...&#10;例如：&#10;质量还可以，但价格偏贵。&#10;客服态度不好，退款申请一直没有回复。"></textarea>
+      </div>
+    </div>
+
+    <div id="error-message" class="error-box hidden"></div>
+
+    <div class="button-row">
+      <button id="btn-analyse" class="btn btn-primary" data-i18n="btnAnalyse">开始分析</button>
+      <button id="btn-sample" class="btn btn-secondary" data-i18n="btnSample">加载示例数据</button>
+      <button id="btn-clear-history" class="btn btn-ghost" data-i18n="btnClearHistory">清除历史记录</button>
+    </div>
+  </section>
+
+  <!-- ===================== PROGRESS SECTION ===================== -->
+  <section class="card hidden" id="progress-section">
+    <div class="card-header">
+      <h2 data-i18n="progressSectionTitle">2. 正在进行本地分析</h2>
+      <p class="card-subtext" data-i18n="progressSectionSubtext">所有分析均在您的浏览器本地完成，基于规则的文本分析技术，不调用任何外部服务。</p>
+    </div>
+    <div class="stage-tracker" id="stage-tracker">
+      <div class="stage" data-stage="sentiment">
+        <div class="stage-icon">1</div>
+        <div class="stage-info">
+          <h3 data-i18n="agent1Name">Agent 1：情感分析</h3>
+          <p class="stage-status" data-stage-status="sentiment">等待中</p>
+        </div>
+      </div>
+      <div class="stage" data-stage="theme">
+        <div class="stage-icon">2</div>
+        <div class="stage-info">
+          <h3 data-i18n="agent2Name">Agent 2：主题发现</h3>
+          <p class="stage-status" data-stage-status="theme">等待中</p>
+        </div>
+      </div>
+      <div class="stage" data-stage="insight">
+        <div class="stage-icon">3</div>
+        <div class="stage-info">
+          <h3 data-i18n="agent3Name">Agent 3：消费者洞察</h3>
+          <p class="stage-status" data-stage-status="insight">等待中</p>
+        </div>
+      </div>
+      <div class="stage" data-stage="benchmark">
+        <div class="stage-icon">4</div>
+        <div class="stage-info">
+          <h3 data-i18n="agent4Name">Agent 4：竞争对标</h3>
+          <p class="stage-status" data-stage-status="benchmark">等待中</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== DASHBOARD ===================== -->
+  <section id="dashboard" class="hidden">
+
+    <div class="section-title-row">
+      <h2 data-i18n="dashboardTitle">结果仪表盘</h2>
+      <span class="muted" id="dashboard-meta"></span>
+    </div>
+
+    <!-- Overview -->
+    <div class="grid grid-3">
+      <div class="card metric-card">
+        <p class="metric-label" data-i18n="labelOverallSatisfactionYou">总体满意度（本品牌）</p>
+        <div class="score-circle" id="brand-score-circle">
+          <span id="brand-score-value">0</span>
+        </div>
+        <p class="metric-sub" id="brand-score-sub"></p>
+      </div>
+
+      <div class="card metric-card">
+        <p class="metric-label" data-i18n="labelOverallSatisfactionCompetitor">总体满意度（竞品）</p>
+        <div class="score-circle score-circle-alt" id="competitor-score-circle">
+          <span id="competitor-score-value">0</span>
+        </div>
+        <p class="metric-sub" id="competitor-score-sub"></p>
+      </div>
+
+      <div class="card">
+        <p class="metric-label" id="sentiment-dist-title" data-i18n="sentimentDistTitle">情感分布 — 本品牌</p>
+        <div class="sentiment-bars" id="sentiment-bars"></div>
+        <div class="legend" id="sentiment-legend"></div>
+      </div>
+    </div>
+
+    <!-- Themes -->
+    <div class="grid grid-2">
+      <div class="card">
+        <h3 class="block-title" data-i18n="topPositiveThemesTitle">主要正面主题</h3>
+        <div id="positive-themes" class="theme-list"></div>
+      </div>
+      <div class="card">
+        <h3 class="block-title" data-i18n="painPointsTitle">核心痛点</h3>
+        <div id="pain-points" class="theme-list"></div>
+      </div>
+    </div>
+
+    <!-- Insights -->
+    <div class="card">
+      <h3 class="block-title" data-i18n="consumerInsightsTitle">消费者洞察</h3>
+      <div id="insight-cards" class="insight-grid"></div>
+    </div>
+
+    <!-- Personas -->
+    <div class="card">
+      <h3 class="block-title" data-i18n="personasTitle">消费者画像</h3>
+      <p class="card-subtext" data-i18n="personasSubtext">仅展示评论中有证据支持的消费者画像。</p>
+      <div id="persona-cards" class="persona-grid"></div>
+    </div>
+
+    <!-- Competitor benchmark -->
+    <div class="card">
+      <h3 class="block-title" data-i18n="benchmarkTitle">竞争对标</h3>
+      <div class="table-wrap">
+        <table class="benchmark-table" id="benchmark-table">
+          <thead>
+            <tr>
+              <th data-i18n="colCategory">类别</th>
+              <th id="th-brand" data-i18n="colYourBrand">本品牌</th>
+              <th id="th-competitor" data-i18n="colCompetitor">竞品</th>
+              <th data-i18n="colGap">差距</th>
+            </tr>
+          </thead>
+          <tbody id="benchmark-body"></tbody>
+        </table>
+      </div>
+      <p class="insight-summary" id="benchmark-summary"></p>
+    </div>
+
+    <!-- Action plan -->
+    <div class="card">
+      <h3 class="block-title" data-i18n="actionPlanTitle">优先行动计划</h3>
+      <div class="action-grid">
+        <div class="action-col action-high">
+          <h4 data-i18n="highPriority">高优先级</h4>
+          <ul id="action-high"></ul>
+        </div>
+        <div class="action-col action-medium">
+          <h4 data-i18n="mediumPriority">中优先级</h4>
+          <ul id="action-medium"></ul>
+        </div>
+        <div class="action-col action-low">
+          <h4 data-i18n="lowPriority">低优先级</h4>
+          <ul id="action-low"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trend -->
+    <div class="card">
+      <h3 class="block-title" data-i18n="trendTitle">历史趋势</h3>
+      <p class="card-subtext" data-i18n="trendSubtext">追踪您在此浏览器上完成的所有分析的满意度得分变化。</p>
+      <div id="trend-empty-state" class="empty-state hidden">
+        <p data-i18n="trendEmptyText">完成至少两次分析后，这里将显示趋势折线图。每次完成的分析都会自动保存到您浏览器的本地历史记录中。</p>
+      </div>
+      <canvas id="trend-canvas" height="220"></canvas>
+      <div class="legend" id="trend-legend"></div>
+    </div>
+
+  </section>
+
+  <!-- ===================== HISTORY SECTION ===================== -->
+  <section class="card" id="history-section">
+    <div class="card-header">
+      <h2 data-i18n="historyTitle">历史记录</h2>
+      <p class="card-subtext" data-i18n="historySubtext">数据保存在您浏览器的本地存储（localStorage）中。点击任意记录可重新加载该次分析结果。</p>
+    </div>
+    <div id="history-list" class="history-list">
+      <p class="empty-state-text" data-i18n="historyEmptyText">暂无历史记录。完成上方第一次分析后即可开始积累历史数据。</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="app-footer">
+  <p data-i18n="footerText">ConsumerLens AI 完全在您的浏览器本地运行。任何评论内容、品牌名称或分析结果均不会被发送到任何服务器、API 或第三方。</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
