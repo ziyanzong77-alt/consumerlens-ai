@@ -1745,52 +1745,138 @@ body {
   background: var(--grey-bg);
 }
 
-/* ===================== PRINT STYLES ===================== */
+/* ===================== PRINT STYLES =====================
+   Rebuilt to avoid blank trailing pages: instead of hiding
+   content with visibility (which still reserves layout space
+   and height), we explicitly display:none every non-report
+   element, and reset the report container's box model so it
+   flows naturally from the top of the page.
+===================================================== */
 
 @media print {
-  body * {
-    visibility: hidden;
+
+  /* ---- Document-level resets: no leftover scroll height ---- */
+  html, body {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
-  #report-preview,
-  #report-preview * {
-    visibility: visible;
-  }
-
-  #report-preview {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    margin: 0;
-    border: none;
-    box-shadow: none;
-    border-radius: 0;
-  }
-
+  /* ---- Hard-hide every part of the interface that is not the report ---- */
   .app-header,
   .hero-desc,
   .workflow-card,
   #input-section,
   #progress-section,
+  #dashboard,
   #history-section,
-  .report-center-card .button-row,
+  .app-footer,
+  .lang-toggle,
+  .tag-badge,
+  #report-center-section .card-header,
+  #report-center-section .button-row,
   #report-center-empty,
   #report-center-notice,
-  .app-footer,
-  #btn-export-report,
-  .section-title-row {
+  .section-title-row,
+  button,
+  .btn {
     display: none !important;
+  }
+
+  /* ---- Kill sticky/fixed positioning so nothing repeats per page ---- */
+  .app-header {
+    position: static !important;
+  }
+
+  /* ---- Collapse the page shell around the report so it isn't
+     sitting inside a padded / max-width flex column that can
+     leave trailing empty space ---- */
+  .page-wrap {
+    display: block !important;
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+  }
+
+  /* ---- The report's outer card wrapper: strip all chrome ---- */
+  #report-center-section {
+    display: block !important;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* ---- The report itself: fully static flow, no fixed/absolute
+     sizing that could create extra blank pages ---- */
+  #report-preview {
+    display: block !important;
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    transform: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+  }
+
+  #report-preview.hidden {
+    display: none !important;
+  }
+
+  .report-page-inner {
+    padding: 0 !important;
   }
 
   .report-cover {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+    padding: 24px 20px !important;
   }
 
   .report-section {
+    padding: 18px 4px !important;
+    break-inside: avoid;
     page-break-inside: avoid;
     border-bottom: 1px solid #ddd;
+  }
+
+  /* Never force a page break after the last section — that is what
+     produces a trailing blank page. */
+  .report-section:last-of-type {
+    page-break-after: auto !important;
+    break-after: auto !important;
+    border-bottom: none;
+  }
+
+  .report-footer {
+    padding: 14px 4px !important;
+  }
+
+  /* ---- Avoid awkward splits inside individual cards/cells ---- */
+  .report-section,
+  .report-card,
+  .report-kpi-cell,
+  .report-persona-cell,
+  .report-rec-cell,
+  .kpi-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 
   .report-kpi-cell,
@@ -1800,8 +1886,22 @@ body {
     print-color-adjust: exact;
   }
 
+  /* ---- Never let an empty section/card reserve a blank area ---- */
+  .report-section:empty,
+  .report-card:empty,
+  .kpi-card:empty {
+    display: none !important;
+  }
+
+  /* ---- Neutralize shadows/hover states that only make sense on screen ---- */
+  .card,
   .card:hover {
-    box-shadow: none;
+    box-shadow: none !important;
+  }
+
+  @page {
+    size: A4;
+    margin: 14mm;
   }
 }
 

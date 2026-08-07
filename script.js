@@ -44,7 +44,7 @@
       btnAnalyse: "开始分析",
       btnSample: "加载示例数据",
       btnClearHistory: "清除历史记录",
-      btnExportReport: "导出报告",
+      btnExportReport: "导出分析数据（JSON）",
       btnExportHistory: "导出历史记录",
 
       progressSectionTitle: "2. 正在进行本地分析",
@@ -173,8 +173,8 @@
 
       reportCenterTitle: "高管报告中心",
       reportCenterSubtitle: "基于最新的 AI 分析结果生成专业管理报告",
-      btnGenerateReport: "生成报告",
-      btnPrintReport: "打印报告",
+      btnGenerateReport: "生成管理报告",
+      btnPrintReport: "打印 / 保存为 PDF",
       reportCenterEmptyText: "请先完成一次分析，然后点击“生成报告”以创建高管报告。",
       reportCenterNoticeText: "请先完成一次分析，才能生成或打印高管报告。",
       reportCoverTagline: "消费者之声情报平台",
@@ -224,7 +224,7 @@
       btnAnalyse: "Analyse Reviews",
       btnSample: "Load Sample Data",
       btnClearHistory: "Clear History",
-      btnExportReport: "Export Report",
+      btnExportReport: "Export Analysis Data (JSON)",
       btnExportHistory: "Export History",
 
       progressSectionTitle: "2. Running Local Analysis",
@@ -353,8 +353,8 @@
 
       reportCenterTitle: "Executive Report Center",
       reportCenterSubtitle: "Generate professional management reports from the latest AI analysis.",
-      btnGenerateReport: "Generate Report",
-      btnPrintReport: "Print Report",
+      btnGenerateReport: "Generate Executive Report",
+      btnPrintReport: "Print / Save as PDF",
       reportCenterEmptyText: "Please run an analysis first, then click \"Generate Report\" to create an executive report.",
       reportCenterNoticeText: "Please run an analysis first before generating or printing an executive report.",
       reportCoverTagline: "Voice of Customer Intelligence",
@@ -2145,7 +2145,7 @@
       businessRecommendation: state.businessRecData
     };
     const safeBrand = (state.brandName || "brand").replace(/[^a-zA-Z0-9\u4e00-\u9fff-]+/g, "_");
-    downloadBlob(`ConsumerLensAI_Report_${safeBrand}.json`, JSON.stringify(report, null, 2), "application/json");
+    downloadBlob(`ConsumerLensAI_AnalysisData_${safeBrand}.json`, JSON.stringify(report, null, 2), "application/json");
   }
 
   function exportHistoryCSV() {
@@ -2429,6 +2429,18 @@
     document.querySelectorAll("[data-i18n-placeholder]").forEach((elNode) => {
       const key = elNode.getAttribute("data-i18n-placeholder");
       elNode.placeholder = t(key);
+    });
+
+    document.querySelectorAll("[data-i18n-title]").forEach((elNode) => {
+      const key = elNode.getAttribute("data-i18n-title");
+      const val = t(key);
+      if (typeof val === "string") elNode.title = val;
+    });
+
+    document.querySelectorAll("[data-i18n-aria]").forEach((elNode) => {
+      const key = elNode.getAttribute("data-i18n-aria");
+      const val = t(key);
+      if (typeof val === "string") elNode.setAttribute("aria-label", val);
     });
 
     el.langBtnZh.classList.toggle("active", state.lang === "zh");
