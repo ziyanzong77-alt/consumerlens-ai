@@ -396,9 +396,30 @@
     </div>
   </section>
 
+  <!-- ===================== EXECUTIVE REPORT CENTER ===================== -->
+  <section class="card report-center-card" id="report-center-section">
+    <div class="card-header">
+      <h2 data-i18n="reportCenterTitle">高管报告中心</h2>
+      <p class="card-subtext" data-i18n="reportCenterSubtitle">基于最新的 AI 分析结果生成专业管理报告</p>
+    </div>
+
+    <div class="button-row">
+      <button id="btn-generate-report" class="btn btn-primary" data-i18n="btnGenerateReport">生成报告</button>
+      <button id="btn-print-report" class="btn btn-secondary" data-i18n="btnPrintReport">打印报告</button>
+    </div>
+
+    <div id="report-center-notice" class="error-box hidden"></div>
+
+    <div id="report-center-empty" class="empty-state">
+      <p data-i18n="reportCenterEmptyText">请先完成一次分析，然后点击“生成报告”以创建高管报告。</p>
+    </div>
+
+    <div id="report-preview" class="report-preview hidden"></div>
+  </section>
+
 </main>
 
-<footer class="app-footer">
+<footer class="app-footer" id="app-footer">
   <p data-i18n="footerText">ConsumerLens AI 完全在您的浏览器本地运行。任何评论内容、品牌名称或分析结果均不会被发送到任何服务器、API 或第三方。</p>
 </footer>
 

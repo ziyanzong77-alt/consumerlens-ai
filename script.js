@@ -171,6 +171,27 @@
 
       loadedFromHistoryPrefix: "已从历史记录加载 —",
 
+      reportCenterTitle: "高管报告中心",
+      reportCenterSubtitle: "基于最新的 AI 分析结果生成专业管理报告",
+      btnGenerateReport: "生成报告",
+      btnPrintReport: "打印报告",
+      reportCenterEmptyText: "请先完成一次分析，然后点击“生成报告”以创建高管报告。",
+      reportCenterNoticeText: "请先完成一次分析，才能生成或打印高管报告。",
+      reportCoverTagline: "消费者之声情报平台",
+      reportCoverGeneratedLabel: "生成的报告",
+      reportIdLabel: "报告编号",
+      reportGenTimeLabel: "生成时间",
+      reportVersionLabel: "版本",
+      reportOverallSentimentLabel: "整体情感倾向",
+      reportMainRiskLabel: "主要风险",
+      reportDashboardSummaryTitle: "仪表盘摘要",
+      reportCompetitorTitle: "竞品对比",
+      reportGapLabel: "竞争差距",
+      reportFooterText: "由 ConsumerLens AI 自动生成",
+      sentimentDominantPositive: (pct) => `本次评论以正面情感为主，正面评论占比 ${pct}%。`,
+      sentimentDominantNeutral: (pct) => `本次评论以中立情感为主，中立评论占比 ${pct}%。`,
+      sentimentDominantNegative: (pct) => `本次评论以负面情感为主，负面评论占比 ${pct}%。`,
+
       defaultBrandName: "本品牌",
       defaultCompetitorName: "竞品"
     },
@@ -329,6 +350,27 @@
       errorMinCompetitor: "Please enter at least 3 customer reviews for the competitor.",
 
       loadedFromHistoryPrefix: "Loaded from history —",
+
+      reportCenterTitle: "Executive Report Center",
+      reportCenterSubtitle: "Generate professional management reports from the latest AI analysis.",
+      btnGenerateReport: "Generate Report",
+      btnPrintReport: "Print Report",
+      reportCenterEmptyText: "Please run an analysis first, then click \"Generate Report\" to create an executive report.",
+      reportCenterNoticeText: "Please run an analysis first before generating or printing an executive report.",
+      reportCoverTagline: "Voice of Customer Intelligence",
+      reportCoverGeneratedLabel: "Generated Report",
+      reportIdLabel: "Report ID",
+      reportGenTimeLabel: "Generation Time",
+      reportVersionLabel: "Version",
+      reportOverallSentimentLabel: "Overall Sentiment",
+      reportMainRiskLabel: "Main Risk",
+      reportDashboardSummaryTitle: "Dashboard Summary",
+      reportCompetitorTitle: "Competitor Comparison",
+      reportGapLabel: "Competitive Gap",
+      reportFooterText: "Generated automatically by ConsumerLens AI",
+      sentimentDominantPositive: (pct) => `Reviews for this analysis are predominantly positive, at ${pct}%.`,
+      sentimentDominantNeutral: (pct) => `Reviews for this analysis are predominantly neutral, at ${pct}%.`,
+      sentimentDominantNegative: (pct) => `Reviews for this analysis are predominantly negative, at ${pct}%.`,
 
       defaultBrandName: "Your Brand",
       defaultCompetitorName: "Competitor"
@@ -834,7 +876,13 @@
     trendCanvas: document.getElementById("trend-canvas"),
     trendEmptyState: document.getElementById("trend-empty-state"),
 
-    historyList: document.getElementById("history-list")
+    historyList: document.getElementById("history-list"),
+
+    reportCenterNotice: document.getElementById("report-center-notice"),
+    reportCenterEmpty: document.getElementById("report-center-empty"),
+    reportPreview: document.getElementById("report-preview"),
+    btnGenerateReport: document.getElementById("btn-generate-report"),
+    btnPrintReport: document.getElementById("btn-print-report")
   };
 
   let painPointChartInstance = null;
@@ -2110,6 +2158,262 @@
   }
 
   /* -----------------------------------------------------
+     17b. EXECUTIVE REPORT CENTER
+     Builds a professional, print-ready report from the same
+     state used by the live dashboard, then either renders it
+     inline for preview or sends it to the browser print dialog
+     (the user can choose "Save as PDF" there). No PDF library,
+     no embedded fonts, no external API — purely local rendering.
+  ----------------------------------------------------- */
+
+  function generateReportId() {
+    return "CL-" + Date.now().toString(36).toUpperCase();
+  }
+
+  function overallSentimentText(brandA) {
+    const pct = brandA.sentimentPct;
+    const dominant = pct.positive >= pct.neutral && pct.positive >= pct.negative
+      ? "positive"
+      : (pct.negative >= pct.neutral ? "negative" : "neutral");
+    const val = dominant === "positive" ? pct.positive : dominant === "negative" ? pct.negative : pct.neutral;
+    const fnKey = dominant === "positive" ? "sentimentDominantPositive" : dominant === "negative" ? "sentimentDominantNegative" : "sentimentDominantNeutral";
+    const fn = t(fnKey);
+    return typeof fn === "function" ? fn(val) : "";
+  }
+
+  function buildReportData() {
+    if (!state.hasResults) return null;
+
+    const brandA = state.brandAnalysis, compA = state.competitorAnalysis;
+    const kpis = computeKPIs(brandA, compA);
+    const execSummary = buildExecutiveSummary();
+    const labels = THEME_LABELS[state.lang];
+    const personaDefs = PERSONA_DEFINITIONS[state.lang];
+
+    const personas = state.personasData.map((p) => ({
+      title: personaDefs[p.theme].title,
+      painPoints: personaDefs[p.theme].painPoints,
+      motivation: personaDefs[p.theme].motivation,
+      preferredChannel: personaDefs[p.theme].preferredChannel,
+      marketingStrategy: personaDefs[p.theme].marketingStrategy
+    }));
+
+    const topPositiveKeywords = getRankedKeywords(brandA.positiveKeywordFreq, 8).map((k) => k.word);
+    const topNegativeKeywords = getRankedKeywords(brandA.negativeKeywordFreq, 8).map((k) => k.word);
+    const topTopics = getRankedThemes(brandA.themeStats, "total").slice(0, 8).map((th) => labels[th.key]);
+
+    const benchLabels = BENCHMARK_LABELS[state.lang];
+    const comparable = state.benchmarkRows.filter((r) => r.key !== "satisfaction" && r.gap !== null);
+    const strengths = comparable.filter((r) => r.gap > 0).sort((a, b) => b.gap - a.gap).map((r) => `${benchLabels[r.key]} (+${r.gap})`);
+    const weaknesses = comparable.filter((r) => r.gap < 0).sort((a, b) => a.gap - b.gap).map((r) => `${benchLabels[r.key]} (${r.gap})`);
+
+    return {
+      reportId: generateReportId(),
+      generatedAt: new Date(),
+      version: "3.1",
+      lang: state.lang,
+      brandName: state.brandName,
+      competitorName: state.competitorName,
+      overallSentiment: overallSentimentText(brandA),
+      execSummary,
+      kpis,
+      personas,
+      topPositiveKeywords,
+      topNegativeKeywords,
+      topTopics,
+      strengths,
+      weaknesses,
+      gapNarrative: el.benchmarkSummary.textContent,
+      businessRec: {
+        immediate: businessRecText(state.businessRecData.immediate),
+        thirtyDay: businessRecText(state.businessRecData.thirtyDay),
+        ninetyDay: businessRecText(state.businessRecData.ninetyDay)
+      }
+    };
+  }
+
+  function renderReportPreview(data) {
+    const locale = data.lang === "zh" ? "zh-CN" : "en-US";
+    const genTimeStr = data.generatedAt.toLocaleString(locale);
+
+    const kpiCells = [
+      { label: t("kpiBrandHealth"), value: data.kpis.brandHealth },
+      { label: t("kpiSatisfaction"), value: data.kpis.satisfaction },
+      { label: t("kpiCompetitivePosition"), value: data.kpis.competitivePosition },
+      { label: t("kpiAiConfidence"), value: data.kpis.aiConfidence + "%" },
+      { label: t("kpiBusinessRisk"), value: data.kpis.businessRisk + "%" }
+    ].map((c) => `
+      <div class="report-kpi-cell">
+        <p class="rk-label">${c.label}</p>
+        <p class="rk-value">${c.value}</p>
+      </div>
+    `).join("");
+
+    const personaCells = data.personas.length
+      ? data.personas.map((p) => `
+          <div class="report-persona-cell">
+            <h4>${p.title}</h4>
+            <p class="rp-row"><b>${t("personaPainLabel")}:</b> ${p.painPoints}</p>
+            <p class="rp-row"><b>${t("personaMotivationLabel")}:</b> ${p.motivation}</p>
+            <p class="rp-row"><b>${t("personaChannelLabel")}:</b> ${p.preferredChannel}</p>
+            <p class="rp-row"><b>${t("personaMarketingLabel")}:</b> ${p.marketingStrategy}</p>
+          </div>
+        `).join("")
+      : `<p class="empty-state-text">${t("noPersonasText")}</p>`;
+
+    const kwList = (items) => items.length
+      ? `<ul>${items.map((w) => `<li>${w}</li>`).join("")}</ul>`
+      : `<p class="empty-state-text">${t("noKeywordsText")}</p>`;
+
+    const gapList = (items, emptyKey) => items.length
+      ? `<ul>${items.map((s) => `<li>${s}</li>`).join("")}</ul>`
+      : `<p class="empty-state-text">${t(emptyKey)}</p>`;
+
+    el.reportPreview.innerHTML = `
+      <div class="report-cover">
+        <p class="report-brand-name">ConsumerLens AI</p>
+        <p class="report-cover-tagline">${t("reportCoverTagline")}</p>
+        <p class="report-cover-title">${t("reportCoverGeneratedLabel")}: ${data.brandName} vs ${data.competitorName}</p>
+        <div class="report-cover-meta">
+          <div class="rc-item">
+            <p class="rc-label">${t("reportIdLabel")}</p>
+            <p class="rc-value">${data.reportId}</p>
+          </div>
+          <div class="rc-item">
+            <p class="rc-label">${t("reportGenTimeLabel")}</p>
+            <p class="rc-value">${genTimeStr}</p>
+          </div>
+          <div class="rc-item">
+            <p class="rc-label">${t("reportVersionLabel")}</p>
+            <p class="rc-value">${data.version}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="report-section">
+        <h3>${t("execSummaryTitle")}</h3>
+        <div class="report-block">
+          <p class="rb-label">${t("reportOverallSentimentLabel")}</p>
+          <p class="rb-text">${data.overallSentiment}</p>
+        </div>
+        <div class="report-block">
+          <p class="rb-label">${t("execOverallFindingLabel")}</p>
+          <p class="rb-text">${data.execSummary.overallFinding}</p>
+        </div>
+        <div class="report-block">
+          <p class="rb-label">${t("execOpportunityLabel")}</p>
+          <p class="rb-text">${data.execSummary.mainOpportunity}</p>
+        </div>
+        <div class="report-block">
+          <p class="rb-label">${t("reportMainRiskLabel")}</p>
+          <p class="rb-text">${data.execSummary.mainPainPoint}</p>
+        </div>
+      </div>
+
+      <div class="report-section">
+        <h3>${t("reportDashboardSummaryTitle")}</h3>
+        <div class="report-kpi-grid">${kpiCells}</div>
+      </div>
+
+      <div class="report-section">
+        <h3>${t("personasTitle")}</h3>
+        <div class="report-persona-grid">${personaCells}</div>
+      </div>
+
+      <div class="report-section">
+        <h3>${t("keywordIntelTitle")}</h3>
+        <div class="report-keyword-grid">
+          <div class="report-keyword-col">
+            <h4>${t("topPositiveKeywords")}</h4>
+            ${kwList(data.topPositiveKeywords)}
+          </div>
+          <div class="report-keyword-col">
+            <h4>${t("topNegativeKeywords")}</h4>
+            ${kwList(data.topNegativeKeywords)}
+          </div>
+          <div class="report-keyword-col">
+            <h4>${t("topMentionedTopics")}</h4>
+            ${kwList(data.topTopics)}
+          </div>
+        </div>
+      </div>
+
+      <div class="report-section">
+        <h3>${t("reportCompetitorTitle")}</h3>
+        <div class="report-gap-grid">
+          <div class="report-gap-col rg-strengths">
+            <h4>${t("strengthsTitle")}</h4>
+            ${gapList(data.strengths, "noStrengthsText")}
+          </div>
+          <div class="report-gap-col rg-weaknesses">
+            <h4>${t("weaknessesTitle")}</h4>
+            ${gapList(data.weaknesses, "noWeaknessesText")}
+          </div>
+        </div>
+        <div class="report-block">
+          <p class="rb-label">${t("reportGapLabel")}</p>
+          <p class="rb-text">${data.gapNarrative}</p>
+        </div>
+      </div>
+
+      <div class="report-section">
+        <h3>${t("businessRecTitle")}</h3>
+        <div class="report-rec-grid">
+          <div class="report-rec-cell rr-immediate">
+            <h4>${t("immediateAction")}</h4>
+            <p>${data.businessRec.immediate}</p>
+          </div>
+          <div class="report-rec-cell rr-30day">
+            <h4>${t("plan30Day")}</h4>
+            <p>${data.businessRec.thirtyDay}</p>
+          </div>
+          <div class="report-rec-cell rr-90day">
+            <h4>${t("strategy90Day")}</h4>
+            <p>${data.businessRec.ninetyDay}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="report-footer">${t("reportFooterText")}</div>
+    `;
+
+    el.reportPreview.classList.remove("hidden");
+    el.reportCenterEmpty.classList.add("hidden");
+  }
+
+  function showReportNotice() {
+    el.reportCenterNotice.textContent = t("reportCenterNoticeText");
+    el.reportCenterNotice.classList.remove("hidden");
+  }
+
+  function hideReportNotice() {
+    el.reportCenterNotice.classList.add("hidden");
+    el.reportCenterNotice.textContent = "";
+  }
+
+  function generateReportClick() {
+    const data = buildReportData();
+    if (!data) {
+      showReportNotice();
+      return;
+    }
+    hideReportNotice();
+    renderReportPreview(data);
+  }
+
+  function printReportClick() {
+    const data = buildReportData();
+    if (!data) {
+      showReportNotice();
+      return;
+    }
+    hideReportNotice();
+    renderReportPreview(data);
+    // Give the browser a tick to paint the freshly rendered report before invoking print.
+    setTimeout(() => window.print(), 80);
+  }
+
+  /* -----------------------------------------------------
      18. LANGUAGE SWITCHING
   ----------------------------------------------------- */
 
@@ -2151,6 +2455,11 @@
       renderFullDashboard();
     }
 
+    if (!el.reportPreview.classList.contains("hidden")) {
+      const data = buildReportData();
+      if (data) renderReportPreview(data);
+    }
+
     const history = loadHistory();
     renderHistoryList(history);
     drawTrendChart(history);
@@ -2184,6 +2493,8 @@
 
   el.btnExportReport.addEventListener("click", exportCurrentReport);
   el.btnExportHistory.addEventListener("click", exportHistoryCSV);
+  el.btnGenerateReport.addEventListener("click", generateReportClick);
+  el.btnPrintReport.addEventListener("click", printReportClick);
 
   el.langBtnZh.addEventListener("click", () => setLanguage("zh"));
   el.langBtnEn.addEventListener("click", () => setLanguage("en"));

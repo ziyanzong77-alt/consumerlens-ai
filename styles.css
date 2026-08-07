@@ -1448,6 +1448,363 @@ body {
   font-size: 12.5px;
 }
 
+/* ===================== EXECUTIVE REPORT CENTER ===================== */
+
+.report-center-card {
+  background: linear-gradient(180deg, #ffffff 0%, var(--purple-light) 140%);
+}
+
+.report-preview {
+  margin-top: 24px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 0;
+  overflow: hidden;
+}
+
+.report-page-inner {
+  padding: 36px;
+}
+
+.report-cover {
+  background: var(--gradient-purple);
+  color: #fff;
+  padding: 48px 40px;
+  text-align: center;
+}
+
+.report-cover .report-brand-name {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 6px;
+}
+
+.report-cover .report-cover-tagline {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 28px;
+}
+
+.report-cover .report-cover-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 22px;
+}
+
+.report-cover-meta {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 22px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius-md);
+  padding: 14px 22px;
+}
+
+.report-cover-meta .rc-item {
+  text-align: left;
+}
+
+.report-cover-meta .rc-label {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0 0 2px;
+}
+
+.report-cover-meta .rc-value {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.report-section {
+  padding: 28px 40px;
+  border-bottom: 1px solid var(--border);
+}
+
+.report-section:last-of-type {
+  border-bottom: none;
+}
+
+.report-section h3 {
+  margin: 0 0 16px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--navy);
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--purple-light);
+}
+
+.report-block {
+  margin-bottom: 14px;
+}
+
+.report-block:last-child {
+  margin-bottom: 0;
+}
+
+.report-block .rb-label {
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--purple-dark);
+}
+
+.report-block p.rb-text {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--navy-soft);
+}
+
+.report-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 800px) {
+  .report-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.report-kpi-cell {
+  background: var(--grey-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  text-align: center;
+}
+
+.report-kpi-cell .rk-label {
+  font-size: 10px;
+  color: var(--grey-text);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 0 0 4px;
+}
+
+.report-kpi-cell .rk-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--navy);
+  margin: 0;
+}
+
+.report-persona-grid, .report-opportunity-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 800px) {
+  .report-persona-grid, .report-opportunity-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.report-persona-cell {
+  background: var(--grey-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+}
+
+.report-persona-cell h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.report-persona-cell .rp-row {
+  font-size: 12px;
+  color: var(--navy-soft);
+  margin: 0 0 5px;
+  line-height: 1.5;
+}
+
+.report-persona-cell .rp-row b {
+  color: var(--navy);
+}
+
+.report-keyword-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 800px) {
+  .report-keyword-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.report-keyword-col h4 {
+  margin: 0 0 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--navy-soft);
+}
+
+.report-keyword-col ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12.5px;
+  color: var(--navy-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.report-gap-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+@media (max-width: 800px) {
+  .report-gap-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.report-gap-col h4 {
+  margin: 0 0 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.report-gap-col.rg-strengths h4 { color: var(--green); }
+.report-gap-col.rg-weaknesses h4 { color: var(--red); }
+
+.report-gap-col ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12.5px;
+  color: var(--navy-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.report-rec-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 800px) {
+  .report-rec-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.report-rec-cell {
+  border-radius: var(--radius-md);
+  padding: 14px;
+  border: 1px solid var(--border);
+}
+
+.report-rec-cell h4 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-weight: 700;
+}
+
+.report-rec-cell.rr-immediate { background: var(--red-bg); }
+.report-rec-cell.rr-immediate h4 { color: var(--red); }
+.report-rec-cell.rr-30day { background: var(--amber-bg); }
+.report-rec-cell.rr-30day h4 { color: var(--amber); }
+.report-rec-cell.rr-90day { background: var(--blue-bg); }
+.report-rec-cell.rr-90day h4 { color: var(--blue); }
+
+.report-rec-cell p {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--navy-soft);
+  line-height: 1.6;
+}
+
+.report-footer {
+  padding: 22px 40px;
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--grey-text);
+  background: var(--grey-bg);
+}
+
+/* ===================== PRINT STYLES ===================== */
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #report-preview,
+  #report-preview * {
+    visibility: visible;
+  }
+
+  #report-preview {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .app-header,
+  .hero-desc,
+  .workflow-card,
+  #input-section,
+  #progress-section,
+  #history-section,
+  .report-center-card .button-row,
+  #report-center-empty,
+  #report-center-notice,
+  .app-footer,
+  #btn-export-report,
+  .section-title-row {
+    display: none !important;
+  }
+
+  .report-cover {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .report-section {
+    page-break-inside: avoid;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .report-kpi-cell,
+  .report-persona-cell,
+  .report-rec-cell {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .card:hover {
+    box-shadow: none;
+  }
+}
+
 /* ===================== SMALL PHONE REFINEMENTS ===================== */
 
 @media (max-width: 480px) {
