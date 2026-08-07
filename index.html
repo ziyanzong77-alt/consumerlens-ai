@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ConsumerLens AI</title>
+<title>ConsumerLens</title>
 <link rel="stylesheet" href="styles.css" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
@@ -15,8 +15,8 @@
     <div class="brand-mark">
       <div class="logo-badge">CL</div>
       <div>
-        <h1>ConsumerLens AI</h1>
-        <p class="subtitle" data-i18n="tagline">消费者之声与竞争洞察平台</p>
+        <h1>ConsumerLens</h1>
+        <p class="subtitle" data-i18n="tagline">消费者智能洞察平台</p>
       </div>
     </div>
 
@@ -34,10 +34,10 @@
 
   <p class="hero-desc" data-i18n="heroDesc">将消费者评论转化为可执行的商业洞察。</p>
 
-  <!-- ===================== AI WORKFLOW VISUALIZATION (6 nodes) ===================== -->
+  <!-- ===================== WORKFLOW VISUALIZATION (6 nodes) ===================== -->
   <section class="workflow-card" id="workflow-section">
-    <h2 class="workflow-title" data-i18n="wfTitle">AI 智能分析工作流</h2>
-    <p class="workflow-subtitle" data-i18n="wfSubtitle">六步本地 AI 代理管道，将原始评论转化为高管级商业报告</p>
+    <h2 class="workflow-title" data-i18n="wfTitle">分析工作流</h2>
+    <p class="workflow-subtitle" data-i18n="wfSubtitle">六步分析流程，将原始评论转化为高管级商业报告</p>
 
     <div class="workflow-track">
       <div class="workflow-node node-io">
@@ -48,19 +48,19 @@
 
       <div class="workflow-node node-agent" data-wf-node="sentimentAI">
         <div class="node-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.6-9.5-9C.7 8.4 2.7 5 6 5c2 0 3.3 1 4 2.2C10.7 6 12 5 14 5c3.3 0 5.3 3.4 3.5 7-2.5 4.4-9.5 9-9.5 9z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
-        <p class="node-title" data-i18n="wfSentimentAI">情感智能体</p>
+        <p class="node-title" data-i18n="wfSentimentAI">情感分析</p>
       </div>
       <div class="workflow-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h14m0 0l-5-5m5 5l-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
 
       <div class="workflow-node node-agent" data-wf-node="personaAI">
         <div class="node-icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.2" stroke="currentColor" stroke-width="1.6"/><path d="M5 20c1-3.5 4-5.5 7-5.5s6 2 7 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
-        <p class="node-title" data-i18n="wfPersonaAI">画像智能体</p>
+        <p class="node-title" data-i18n="wfPersonaAI">消费者画像</p>
       </div>
       <div class="workflow-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h14m0 0l-5-5m5 5l-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
 
       <div class="workflow-node node-agent" data-wf-node="competitorAI">
         <div class="node-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V9m6 10V4m6 15v-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
-        <p class="node-title" data-i18n="wfCompetitorAI">竞争智能体</p>
+        <p class="node-title" data-i18n="wfCompetitorAI">竞争分析</p>
       </div>
       <div class="workflow-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h14m0 0l-5-5m5 5l-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
 
@@ -120,28 +120,28 @@
   <!-- ===================== PROGRESS SECTION (5 stages) ===================== -->
   <section class="card hidden" id="progress-section">
     <div class="card-header">
-      <h2 data-i18n="progressSectionTitle">2. 正在进行本地分析</h2>
+      <h2 data-i18n="progressSectionTitle">2. 分析工作流</h2>
       <p class="card-subtext" data-i18n="progressSectionSubtext">所有分析均在您的浏览器本地完成，基于规则的文本分析技术，不调用任何外部服务。</p>
     </div>
     <div class="stage-tracker" id="stage-tracker">
       <div class="stage" data-stage="sentimentAI">
         <div class="stage-icon">1</div>
         <div class="stage-info">
-          <h3 data-i18n="wfSentimentAI">情感智能体</h3>
+          <h3 data-i18n="wfSentimentAI">情感分析</h3>
           <p class="stage-status" data-stage-status="sentimentAI">等待中</p>
         </div>
       </div>
       <div class="stage" data-stage="personaAI">
         <div class="stage-icon">2</div>
         <div class="stage-info">
-          <h3 data-i18n="wfPersonaAI">画像智能体</h3>
+          <h3 data-i18n="wfPersonaAI">消费者画像</h3>
           <p class="stage-status" data-stage-status="personaAI">等待中</p>
         </div>
       </div>
       <div class="stage" data-stage="competitorAI">
         <div class="stage-icon">3</div>
         <div class="stage-info">
-          <h3 data-i18n="wfCompetitorAI">竞争智能体</h3>
+          <h3 data-i18n="wfCompetitorAI">竞争分析</h3>
           <p class="stage-status" data-stage-status="competitorAI">等待中</p>
         </div>
       </div>
@@ -277,7 +277,7 @@
 
     <!-- Opportunity Dashboard -->
     <div class="card">
-      <h3 class="block-title" data-i18n="opportunityDashboardTitle">机会仪表盘</h3>
+      <h3 class="block-title" data-i18n="opportunityDashboardTitle">增长机会仪表盘</h3>
       <p class="card-subtext" data-i18n="opportunityDashboardSubtitle">基于客户投诉自动生成的改进机会</p>
       <div id="opportunity-cards" class="opportunity-grid"></div>
     </div>
@@ -291,7 +291,7 @@
 
     <!-- Competitive Gap -->
     <div class="card">
-      <h3 class="block-title" data-i18n="competitiveGapTitle">竞争差距分析</h3>
+      <h3 class="block-title" data-i18n="competitiveGapTitle">竞争基准分析</h3>
       <div class="table-wrap">
         <table class="benchmark-table" id="benchmark-table">
           <thead>
@@ -350,7 +350,7 @@
 
     <!-- Business Recommendation (new tiers) -->
     <div class="card">
-      <h3 class="block-title" data-i18n="businessRecTitle">商业行动建议</h3>
+      <h3 class="block-title" data-i18n="businessRecTitle">战略建议</h3>
       <p class="card-subtext" data-i18n="businessRecSubtitle">按时间维度划分的行动路线图</p>
       <div class="action-grid">
         <div class="action-col rec-immediate">
@@ -400,7 +400,7 @@
   <section class="card report-center-card" id="report-center-section">
     <div class="card-header">
       <h2 data-i18n="reportCenterTitle">高管报告中心</h2>
-      <p class="card-subtext" data-i18n="reportCenterSubtitle">基于最新的 AI 分析结果生成专业管理报告</p>
+      <p class="card-subtext" data-i18n="reportCenterSubtitle">基于最新的分析结果生成专业管理报告</p>
     </div>
 
     <div class="button-row">
@@ -420,7 +420,7 @@
 </main>
 
 <footer class="app-footer" id="app-footer">
-  <p data-i18n="footerText">ConsumerLens AI 完全在您的浏览器本地运行。任何评论内容、品牌名称或分析结果均不会被发送到任何服务器、API 或第三方。</p>
+  <p data-i18n="footerText">ConsumerLens 完全在您的浏览器本地运行。任何评论内容、品牌名称或分析结果均不会被发送到任何服务器、API 或第三方。</p>
 </footer>
 
 <script src="script.js"></script>

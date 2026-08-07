@@ -1,5 +1,5 @@
 /* =====================================================
-   ConsumerLens AI — script.js (V3, Bilingual: 中文 / English)
+   ConsumerLens — script.js (V3.2, Bilingual: 中文 / English)
    100% local, rule-based text analysis.
    No APIs, no backend, no external services.
    Uses Chart.js (CDN) purely for client-side rendering.
@@ -18,15 +18,15 @@
   const I18N = {
     zh: {
       tagBadge: "本地运行 · 无需API · 零成本",
-      tagline: "消费者之声与竞争洞察平台",
+      tagline: "消费者智能洞察平台",
       heroDesc: "将消费者评论转化为可执行的商业洞察。",
 
-      wfTitle: "AI 智能分析工作流",
-      wfSubtitle: "六步本地 AI 代理管道，将原始评论转化为高管级商业报告",
+      wfTitle: "分析工作流",
+      wfSubtitle: "六步分析流程，将原始评论转化为高管级商业报告",
       wfNodeReviews: "输入评论",
-      wfSentimentAI: "情感智能体",
-      wfPersonaAI: "画像智能体",
-      wfCompetitorAI: "竞争智能体",
+      wfSentimentAI: "情感分析",
+      wfPersonaAI: "消费者画像",
+      wfCompetitorAI: "竞争分析",
       wfBusinessIntel: "商业智能",
       wfExecReport: "高管报告",
 
@@ -47,7 +47,7 @@
       btnExportReport: "导出分析数据（JSON）",
       btnExportHistory: "导出历史记录",
 
-      progressSectionTitle: "2. 正在进行本地分析",
+      progressSectionTitle: "2. 分析工作流",
       progressSectionSubtext: "所有分析均在您的浏览器本地完成，基于规则的文本分析技术，不调用任何外部服务。",
       statusWaiting: "等待中",
       statusAnalysing: "分析中",
@@ -60,7 +60,7 @@
       kpiBrandHealth: "品牌健康度",
       kpiSatisfaction: "客户满意度",
       kpiCompetitivePosition: "竞争地位指数",
-      kpiAiConfidence: "AI 置信度",
+      kpiAiConfidence: "置信度分数",
       kpiBusinessRisk: "业务风险指数",
       kpiBrandHealthCaption: "综合满意度与各主题表现计算得出",
       kpiSatisfactionCaption: "基于正负面评论比例计算",
@@ -72,7 +72,7 @@
       execSummarySubtitle: "适合市场经理阅读的简明报告",
       execOverallFindingLabel: "整体发现",
       execPainPointLabel: "主要客户痛点",
-      execOpportunityLabel: "主要客户机会",
+      execOpportunityLabel: "主要增长机会",
       execAdvantageLabel: "竞品优势",
       execRecommendationLabel: "建议商业行动",
 
@@ -102,9 +102,9 @@
       painPointDashboardSubtitle: "自动汇总本品牌评论中最主要的五大痛点",
       painPointChartAxisLabel: "占本品牌评论的百分比",
 
-      opportunityDashboardTitle: "机会仪表盘",
+      opportunityDashboardTitle: "增长机会仪表盘",
       opportunityDashboardSubtitle: "基于客户投诉自动生成的改进机会",
-      opportunityCardTitlePrefix: "机会",
+      opportunityCardTitlePrefix: "增长机会",
       opportunityMarketLabel: "市场机会",
       opportunityQuickWinLabel: "速赢举措",
       opportunityLongTermLabel: "长期机会",
@@ -123,7 +123,7 @@
       personaMarketingLabel: "建议营销策略",
       noPersonasText: "暂未检测到有力的消费者画像特征，尝试输入更详细的评论以获得画像分析。",
 
-      competitiveGapTitle: "竞争差距分析",
+      competitiveGapTitle: "竞争基准分析",
       colCategory: "类别",
       colYourBrand: "本品牌",
       colCompetitor: "竞品",
@@ -141,7 +141,7 @@
       mediumPriority: "中优先级",
       lowPriority: "低优先级",
 
-      businessRecTitle: "商业行动建议",
+      businessRecTitle: "战略建议",
       businessRecSubtitle: "按时间维度划分的行动路线图",
       immediateAction: "立即行动",
       plan30Day: "30 天计划",
@@ -164,7 +164,7 @@
       historyYouLabel: "本品牌",
       historyCompetitorLabel: "竞品",
 
-      footerText: "ConsumerLens AI 完全在您的浏览器本地运行。任何评论内容、品牌名称或分析结果均不会被发送到任何服务器、API 或第三方。",
+      footerText: "ConsumerLens 完全在您的浏览器本地运行。任何评论内容、品牌名称或分析结果均不会被发送到任何服务器、API 或第三方。",
 
       errorMinBrand: "请至少输入3条本品牌消费者评论。",
       errorMinCompetitor: "请至少输入3条竞品消费者评论。",
@@ -172,12 +172,12 @@
       loadedFromHistoryPrefix: "已从历史记录加载 —",
 
       reportCenterTitle: "高管报告中心",
-      reportCenterSubtitle: "基于最新的 AI 分析结果生成专业管理报告",
+      reportCenterSubtitle: "基于最新的分析结果生成专业管理报告",
       btnGenerateReport: "生成管理报告",
       btnPrintReport: "打印 / 保存为 PDF",
       reportCenterEmptyText: "请先完成一次分析，然后点击“生成报告”以创建高管报告。",
       reportCenterNoticeText: "请先完成一次分析，才能生成或打印高管报告。",
-      reportCoverTagline: "消费者之声情报平台",
+      reportCoverTagline: "消费者智能洞察平台",
       reportCoverGeneratedLabel: "生成的报告",
       reportIdLabel: "报告编号",
       reportGenTimeLabel: "生成时间",
@@ -186,8 +186,8 @@
       reportMainRiskLabel: "主要风险",
       reportDashboardSummaryTitle: "仪表盘摘要",
       reportCompetitorTitle: "竞品对比",
-      reportGapLabel: "竞争差距",
-      reportFooterText: "由 ConsumerLens AI 自动生成",
+      reportGapLabel: "竞争基准",
+      reportFooterText: "由 ConsumerLens 自动生成",
       sentimentDominantPositive: (pct) => `本次评论以正面情感为主，正面评论占比 ${pct}%。`,
       sentimentDominantNeutral: (pct) => `本次评论以中立情感为主，中立评论占比 ${pct}%。`,
       sentimentDominantNegative: (pct) => `本次评论以负面情感为主，负面评论占比 ${pct}%。`,
@@ -198,15 +198,15 @@
 
     en: {
       tagBadge: "Runs 100% locally · No API · No cost",
-      tagline: "Voice of Customer & Competitive Intelligence Platform",
+      tagline: "Consumer Intelligence Platform",
       heroDesc: "Turn customer feedback into actionable business insights.",
 
-      wfTitle: "AI Analysis Workflow",
-      wfSubtitle: "A six-step local AI agent pipeline that turns raw reviews into an executive-ready business report",
+      wfTitle: "Analysis Workflow",
+      wfSubtitle: "A six-step analysis process that turns raw reviews into an executive-ready business report",
       wfNodeReviews: "Input Reviews",
-      wfSentimentAI: "Sentiment AI",
-      wfPersonaAI: "Persona AI",
-      wfCompetitorAI: "Competitor AI",
+      wfSentimentAI: "Sentiment Analysis",
+      wfPersonaAI: "Consumer Personas",
+      wfCompetitorAI: "Competitive Analysis",
       wfBusinessIntel: "Business Intelligence",
       wfExecReport: "Executive Report",
 
@@ -227,7 +227,7 @@
       btnExportReport: "Export Analysis Data (JSON)",
       btnExportHistory: "Export History",
 
-      progressSectionTitle: "2. Running Local Analysis",
+      progressSectionTitle: "2. Analysis Workflow",
       progressSectionSubtext: "All processing happens in your browser using rule-based text analysis. No external services are called.",
       statusWaiting: "Waiting",
       statusAnalysing: "Analysing",
@@ -240,7 +240,7 @@
       kpiBrandHealth: "Brand Health Score",
       kpiSatisfaction: "Customer Satisfaction",
       kpiCompetitivePosition: "Competitive Position",
-      kpiAiConfidence: "AI Confidence",
+      kpiAiConfidence: "Confidence Score",
       kpiBusinessRisk: "Business Risk",
       kpiBrandHealthCaption: "Blended from overall satisfaction and theme performance",
       kpiSatisfactionCaption: "Based on the ratio of positive to negative reviews",
@@ -252,7 +252,7 @@
       execSummarySubtitle: "A concise report for marketing managers",
       execOverallFindingLabel: "Overall Finding",
       execPainPointLabel: "Main Customer Pain Point",
-      execOpportunityLabel: "Main Customer Opportunity",
+      execOpportunityLabel: "Main Growth Opportunity",
       execAdvantageLabel: "Competitor Advantage",
       execRecommendationLabel: "Recommended Business Action",
 
@@ -282,9 +282,9 @@
       painPointDashboardSubtitle: "Automatically summarizes the top 5 pain points from your brand's reviews",
       painPointChartAxisLabel: "% of your brand's reviews",
 
-      opportunityDashboardTitle: "Opportunity Dashboard",
+      opportunityDashboardTitle: "Growth Opportunities Dashboard",
       opportunityDashboardSubtitle: "Opportunities automatically generated from customer complaints",
-      opportunityCardTitlePrefix: "Opportunity",
+      opportunityCardTitlePrefix: "Growth Opportunity",
       opportunityMarketLabel: "Market Opportunity",
       opportunityQuickWinLabel: "Quick Win",
       opportunityLongTermLabel: "Long-term Opportunity",
@@ -303,7 +303,7 @@
       personaMarketingLabel: "Suggested Marketing Strategy",
       noPersonasText: "No strong persona patterns were detected yet. Try adding more detailed reviews to surface consumer personas.",
 
-      competitiveGapTitle: "Competitive Gap",
+      competitiveGapTitle: "Competitive Benchmark",
       colCategory: "Category",
       colYourBrand: "Your Brand",
       colCompetitor: "Competitor",
@@ -321,7 +321,7 @@
       mediumPriority: "Medium Priority",
       lowPriority: "Low Priority",
 
-      businessRecTitle: "Business Recommendation",
+      businessRecTitle: "Strategic Recommendations",
       businessRecSubtitle: "A time-phased action roadmap",
       immediateAction: "Immediate Action",
       plan30Day: "30-Day Plan",
@@ -344,7 +344,7 @@
       historyYouLabel: "You",
       historyCompetitorLabel: "Competitor",
 
-      footerText: "ConsumerLens AI runs entirely in your browser. No reviews, brand names, or results are sent to any server, API, or third party.",
+      footerText: "ConsumerLens runs entirely in your browser. No reviews, brand names, or results are sent to any server, API, or third party.",
 
       errorMinBrand: "Please enter at least 3 customer reviews for your brand.",
       errorMinCompetitor: "Please enter at least 3 customer reviews for the competitor.",
@@ -352,12 +352,12 @@
       loadedFromHistoryPrefix: "Loaded from history —",
 
       reportCenterTitle: "Executive Report Center",
-      reportCenterSubtitle: "Generate professional management reports from the latest AI analysis.",
+      reportCenterSubtitle: "Generate professional management reports from the latest analysis.",
       btnGenerateReport: "Generate Executive Report",
       btnPrintReport: "Print / Save as PDF",
       reportCenterEmptyText: "Please run an analysis first, then click \"Generate Report\" to create an executive report.",
       reportCenterNoticeText: "Please run an analysis first before generating or printing an executive report.",
-      reportCoverTagline: "Voice of Customer Intelligence",
+      reportCoverTagline: "Consumer Intelligence Platform",
       reportCoverGeneratedLabel: "Generated Report",
       reportIdLabel: "Report ID",
       reportGenTimeLabel: "Generation Time",
@@ -366,8 +366,8 @@
       reportMainRiskLabel: "Main Risk",
       reportDashboardSummaryTitle: "Dashboard Summary",
       reportCompetitorTitle: "Competitor Comparison",
-      reportGapLabel: "Competitive Gap",
-      reportFooterText: "Generated automatically by ConsumerLens AI",
+      reportGapLabel: "Competitive Benchmark",
+      reportFooterText: "Generated automatically by ConsumerLens",
       sentimentDominantPositive: (pct) => `Reviews for this analysis are predominantly positive, at ${pct}%.`,
       sentimentDominantNeutral: (pct) => `Reviews for this analysis are predominantly neutral, at ${pct}%.`,
       sentimentDominantNegative: (pct) => `Reviews for this analysis are predominantly negative, at ${pct}%.`,
@@ -2145,7 +2145,7 @@
       businessRecommendation: state.businessRecData
     };
     const safeBrand = (state.brandName || "brand").replace(/[^a-zA-Z0-9\u4e00-\u9fff-]+/g, "_");
-    downloadBlob(`ConsumerLensAI_AnalysisData_${safeBrand}.json`, JSON.stringify(report, null, 2), "application/json");
+    downloadBlob(`ConsumerLens_AnalysisData_${safeBrand}.json`, JSON.stringify(report, null, 2), "application/json");
   }
 
   function exportHistoryCSV() {
@@ -2154,7 +2154,7 @@
     const headers = ["date", "brandName", "competitorName", "language", "brandScore", "competitorScore"];
     const rows = history.map((h) => headers.map((k) => `"${String(h[k]).replace(/"/g, '""')}"`).join(","));
     const csv = [headers.join(","), ...rows].join("\n");
-    downloadBlob("ConsumerLensAI_History.csv", csv, "text/csv");
+    downloadBlob("ConsumerLens_History.csv", csv, "text/csv");
   }
 
   /* -----------------------------------------------------
@@ -2271,7 +2271,7 @@
 
     el.reportPreview.innerHTML = `
       <div class="report-cover">
-        <p class="report-brand-name">ConsumerLens AI</p>
+        <p class="report-brand-name">ConsumerLens</p>
         <p class="report-cover-tagline">${t("reportCoverTagline")}</p>
         <p class="report-cover-title">${t("reportCoverGeneratedLabel")}: ${data.brandName} vs ${data.competitorName}</p>
         <div class="report-cover-meta">
